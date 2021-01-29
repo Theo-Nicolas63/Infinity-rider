@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfinityRider.uwp", "Infini
 		{C1DBFFE4-6B77-4F51-9DF1-D4AA8A7DC5A6} = {C1DBFFE4-6B77-4F51-9DF1-D4AA8A7DC5A6}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfinityRider.core", "InfinityRider.core\InfinityRider.core.csproj", "{C1DBFFE4-6B77-4F51-9DF1-D4AA8A7DC5A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfinityRider.core", "InfinityRider.core\InfinityRider.core.csproj", "{C1DBFFE4-6B77-4F51-9DF1-D4AA8A7DC5A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfinityRider.android", "InfinityRider.android\InfinityRider.android.csproj", "{030CD983-3FDE-4D73-A501-989B6BE564ED}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -252,6 +252,7 @@ Global
 		{83B5B0A1-D9AA-435B-90EB-6616F367A7EE}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
 		{83B5B0A1-D9AA-435B-90EB-6616F367A7EE}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
 		{83B5B0A1-D9AA-435B-90EB-6616F367A7EE}.Debug|x64.ActiveCfg = Debug|iPhoneSimulator
+		{83B5B0A1-D9AA-435B-90EB-6616F367A7EE}.Debug|x64.Build.0 = Debug|iPhoneSimulator
 		{83B5B0A1-D9AA-435B-90EB-6616F367A7EE}.Debug|x86.ActiveCfg = Debug|iPhoneSimulator
 		{83B5B0A1-D9AA-435B-90EB-6616F367A7EE}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
 		{83B5B0A1-D9AA-435B-90EB-6616F367A7EE}.Release|ARM.ActiveCfg = Release|iPhoneSimulator
