@@ -62,9 +62,9 @@
     <AndroidResource Include="Resources\Values\Strings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\InfinityRider.core\Content\Content.mgcb">
+    <MonoGameContentReference Include="..\InfinityRider.core\Content\Content.mgcb">
       <Link>Content\Content.mgcb</Link>
-    </None>
+    </MonoGameContentReference>
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>

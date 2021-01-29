@@ -111,9 +111,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\InfinityRider.core\Content\Content.mgcb">
+    <MonoGameContentReference Include="..\InfinityRider.core\Content\Content.mgcb">
       <Link>Content\Content.mgcb</Link>
-    </None>
+    </MonoGameContentReference>
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
   </ItemGroup>
