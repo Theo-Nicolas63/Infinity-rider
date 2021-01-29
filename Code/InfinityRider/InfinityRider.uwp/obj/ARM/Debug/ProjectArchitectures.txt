@@ -1,1 +1,0 @@
-C:\Users\pesce\Desktop\cours\Réalité Virtuel\Projet (Infinity-Rider)\Code\InfinityRider\InfinityRider.uwp\InfinityRider.uwp.csproj;arm
