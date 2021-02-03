@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace InfinityRider.core.Game
+namespace InfinityRider.core.game
 {
     public class GameObject : DrawableGameComponent
     {

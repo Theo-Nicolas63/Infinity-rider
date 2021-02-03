@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using InfinityRider.core.game;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace InfinityRider.core
 {
@@ -8,6 +10,8 @@ namespace InfinityRider.core
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private Bike Bike { get; set; }
+        private IList<GameObject> GameObjects { get; set; } = new List<GameObject>();
 
         public Game1()
         {
@@ -21,6 +25,11 @@ namespace InfinityRider.core
             // TODO: Add your initialization logic here
 
             base.Initialize();
+
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Bike = new Bike(this, _spriteBatch);
+            GameObjects.Add(Bike);
         }
 
         protected override void LoadContent()
@@ -36,6 +45,10 @@ namespace InfinityRider.core
                 Exit();
 
             // TODO: Add your update logic here
+            foreach (var gameObject in GameObjects)
+            {
+                gameObject.Update(gameTime);
+            }
 
             base.Update(gameTime);
         }
@@ -45,6 +58,12 @@ namespace InfinityRider.core
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            foreach(var gameObject in GameObjects)
+            {
+                gameObject.Draw(gameTime);
+            }
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

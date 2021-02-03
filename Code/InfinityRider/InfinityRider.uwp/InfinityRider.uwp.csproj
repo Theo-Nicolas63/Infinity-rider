@@ -131,9 +131,9 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\InfinityRider.core\Content\Content.mgcb">
+    <MonoGameContentReference Include="..\InfinityRider.core\Content\Content.mgcb">
       <Link>Content\Content.mgcb</Link>
-    </None>
+    </MonoGameContentReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\InfinityRider.core\InfinityRider.core.csproj">

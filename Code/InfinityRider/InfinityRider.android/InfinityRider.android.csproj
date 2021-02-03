@@ -62,10 +62,10 @@
     <AndroidResource Include="Resources\Values\Strings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\InfinityRider.core\Content\Content.mgcb">
+    <MonoGameContentReference Include="..\InfinityRider.core\Content\Content.mgcb">
       <Link>Content\Content.mgcb</Link>
-    </None>
-    <None Include="Properties\AndroidManifest.xml" />
+    </MonoGameContentReference>
+    <MonoGameContentReference Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
