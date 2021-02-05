@@ -10,7 +10,6 @@ namespace InfinityRider.core
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Bike Bike { get; set; }
         private IList<GameObject> GameObjects { get; set; } = new List<GameObject>();
 
         public Game1()
@@ -28,8 +27,10 @@ namespace InfinityRider.core
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Bike = new Bike(this, _spriteBatch);
-            GameObjects.Add(Bike);
+            Background background = new Background(this, _spriteBatch);
+            GameObjects.Add(background);
+            Bike bike = new Bike(this, _spriteBatch);
+            GameObjects.Add(bike);
         }
 
         protected override void LoadContent()
