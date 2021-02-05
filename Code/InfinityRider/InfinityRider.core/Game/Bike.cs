@@ -11,10 +11,14 @@ namespace InfinityRider.core.game
     {
         private Texture2D _texture;
         private Vector2 Position { get; set; }
-        private float Speed { get; set; }
+        private float SpeedMove { get; set; }
+        private float Rotation { get; set; }
+        private float SpeedRotation { get; set; }
         public Bike(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
-            Speed = 500f;
+            SpeedMove = 500f;
+            Rotation = 0f;
+            SpeedRotation = 9f;
         }
 
         public override void Initialize()
@@ -34,27 +38,42 @@ namespace InfinityRider.core.game
 
             var keyBoardState = Keyboard.GetState();
 
+            if(keyBoardState.IsKeyDown(Keys.Space))
+            {
+                Rotation -= SpeedRotation * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                //TODO : Add the forward movement for when the colision manage well be there, with the world/road
+            }
+
+            //This is to test the keyboard and the bike, but in the game it will not be in the code
             if(keyBoardState.IsKeyDown(Keys.Left))
             {
-                Position = Vector2.Add(Position, new Vector2(Speed * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds, 0));
+                Position = Vector2.Add(Position, new Vector2(SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds, 0));
             }
             if (keyBoardState.IsKeyDown(Keys.Right))
             {
-                Position = Vector2.Add(Position, new Vector2(Speed * (float)gameTime.ElapsedGameTime.TotalSeconds, 0));
+                Position = Vector2.Add(Position, new Vector2(SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds, 0));
             }
             if (keyBoardState.IsKeyDown(Keys.Up))
             {
-                Position = Vector2.Add(Position, new Vector2(0, Speed * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds));
+                Position = Vector2.Add(Position, new Vector2(0, SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds));
             }
             if (keyBoardState.IsKeyDown(Keys.Down))
             {
-                Position = Vector2.Add(Position, new Vector2(0, Speed * (float)gameTime.ElapsedGameTime.TotalSeconds));
+                Position = Vector2.Add(Position, new Vector2(0, SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds));
             }
         }
 
         public override void Draw(GameTime gameTime)
         {
-            _spriteBatch.Draw(_texture, Position, null, Color.White, 0f, new Vector2(_texture.Width / 2, _texture.Height / 2), Vector2.One, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(_texture,                                  // Texture (Image)
+                Position,                                                // Position de l'image
+                null,                                                    // Zone de l'image à afficher
+                Color.White,                                             // Teinte
+                Rotation,                                                // Rotation (en rad)
+                new Vector2(_texture.Width / 2, _texture.Height / 2),    // Origine
+                Vector2.One,                                             // Echelle
+                SpriteEffects.None,                                      // Effet
+                0f);                                                     // Profondeur
 
             base.Draw(gameTime);
         }
