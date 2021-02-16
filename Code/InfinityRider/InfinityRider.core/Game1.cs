@@ -1,4 +1,4 @@
-﻿using InfinityRider.core.game;
+﻿using InfinityRider.core.riderGame;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -29,6 +29,8 @@ namespace InfinityRider.core
 
             Background background = new Background(this, _spriteBatch);
             GameObjects.Add(background);
+            RoadConstructor road = new RoadConstructor(this, _spriteBatch);
+            GameObjects.Add(road);
             Bike bike = new Bike(this, _spriteBatch);
             GameObjects.Add(bike);
         }

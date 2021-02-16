@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,7 +16,10 @@ namespace InfinityRider.core.riderGame
         private int[] _terrainContour;
         private Texture2D _foregroundTexture;
         private Random _randomizer = new Random();
-
+        private readonly double[] randoms = new double[3];
+        private float SpeedMove { get; set; } = 0;
+        private float MapPosition { get; set; } = 0;
+        public Color MapColor { get; set; } = Color.Green;
 
         public RoadConstructor(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
@@ -32,20 +36,17 @@ namespace InfinityRider.core.riderGame
         {
             _terrainContour = new int[_screenWidth];
 
-            double random1 = _randomizer.NextDouble() + 1;
-            double random2 = _randomizer.NextDouble() + 2;
-            double random3 = _randomizer.NextDouble() + 3;
-
-            float offset = _screenHeight / 2;
-            float peakheight = 100;
-            float flatness = 70;
+            float offset = _screenHeight * 5 / 8;
+            float peakheight = 75;
+            float flatness = 200;
 
             for(int i = 0; i < _screenWidth; i++)
             {
-                double height = peakheight / random1 * Math.Sin((float) i / flatness * random1 + random1);
-                height += peakheight / random2 * Math.Sin((float)i / flatness * random2 + random2);
-                height += peakheight / random3 * Math.Sin((float)i / flatness * random3 + random3);
-                height += offset;
+                double height = offset;
+                for(int d = 0; d < randoms.Length; d++)
+                {
+                    height += peakheight / randoms[d] * Math.Sin((float) (i + MapPosition) / flatness * randoms[d] + randoms[d]);
+                }
 
                 _terrainContour[i] = (int)height;
             }
@@ -59,14 +60,19 @@ namespace InfinityRider.core.riderGame
             {
                 for(int y = 0; y < _screenHeight; y++)
                 {
-                    if(y > _terrainContour[x])
+                    if(y > _terrainContour[x] && y < _terrainContour[x] + 10)
                     {
-                        foreGroundColors[x + y * _screenWidth] = Color.Green;
-                    } else
+                        foreGroundColors[x + y * _screenWidth] = MapColor;
+                    }
+                    else
                     {
                         foreGroundColors[x + y * _screenWidth] = Color.Transparent;
                     }
 
+                    if (y >= _terrainContour[x] - 5 && y <= _terrainContour[x] || y >= _terrainContour[x] + 10 && y <= _terrainContour[x] + 15)
+                    {
+                        foreGroundColors[x + y * _screenWidth] = Color.FromNonPremultiplied(MapColor.R, MapColor.G, MapColor.B, 100);
+                    }
                 }
             }
 
@@ -74,11 +80,20 @@ namespace InfinityRider.core.riderGame
             _foregroundTexture.SetData(foreGroundColors);
         }
 
+        private void loadRandoms()
+        {
+            randoms[0] = _randomizer.NextDouble() + 1;
+            randoms[1] = _randomizer.NextDouble() + 2;
+            randoms[2] = _randomizer.NextDouble() + 3;
+        }
+
         protected override void LoadContent()
         {
             base.LoadContent();
 
-            if(_game != null)
+            loadRandoms();
+
+            if (_game != null)
             {
                 _screenWidth = _device.Viewport.Width;
                 _screenHeight = _device.Viewport.Height;
@@ -91,6 +106,32 @@ namespace InfinityRider.core.riderGame
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            var keyBoardState = Keyboard.GetState();
+
+            if (keyBoardState.IsKeyDown(Keys.A))
+            {
+                SpeedMove = 500f;
+            } else
+            {
+                SpeedMove = 0;
+            }
+
+            MapPosition += SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if(MapPosition != 0 && MapPosition % 2 == 0)
+            {
+                loadRandoms();
+            }
+
+            if (_game != null)
+            {
+                _screenWidth = _device.Viewport.Width;
+                _screenHeight = _device.Viewport.Height;
+
+                GenerateTerrainContour();
+                CreateForeGround();
+            }
         }
 
         public override void Draw(GameTime gameTime)
