@@ -1,11 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace InfinityRider.core.game
+namespace InfinityRider.core.riderGame
 {
     class Bike : GameObject
     {
@@ -71,7 +68,7 @@ namespace InfinityRider.core.game
                 Color.White,                                             // Teinte
                 Rotation,                                                // Rotation (en rad)
                 new Vector2(_texture.Width / 2, _texture.Height / 2),    // Origine
-                Vector2.One,                                             // Echelle
+                new Vector2(0.6f,0.6f),                                  // Echelle
                 SpriteEffects.None,                                      // Effet
                 0f);                                                     // Profondeur
 
