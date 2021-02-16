@@ -119,11 +119,6 @@ namespace InfinityRider.core.riderGame
 
             MapPosition += SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if(MapPosition != 0 && MapPosition % 2 == 0)
-            {
-                loadRandoms();
-            }
-
             if (_game != null)
             {
                 _screenWidth = _device.Viewport.Width;
