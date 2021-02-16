@@ -38,7 +38,7 @@ namespace InfinityRider.core.riderGame
             if(keyBoardState.IsKeyDown(Keys.Space))
             {
                 Rotation -= SpeedRotation * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                //TODO : Add the forward movement for when the colision manage well be there, with the world/road
+                //TODO : Add the forward movement for when the colision manage will be there, with the world/road
             }
 
             //This is to test the keyboard and the bike, but in the game it will not be in the code
