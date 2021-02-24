@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using InfinityRider.core.Content.Modele;
+using InfinityRider.core.Modele;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -9,6 +11,8 @@ namespace InfinityRider.core
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        public Moto moto { get; set; }
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -18,11 +22,11 @@ namespace InfinityRider.core
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            moto = new Moto(this, _spriteBatch, new Vector2(100, 500));
+            
         }
-
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -38,15 +42,20 @@ namespace InfinityRider.core
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+
+            _spriteBatch.Begin();
+            moto.Update(gameTime);
+            _spriteBatch.End();
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            _spriteBatch.Begin();
+            moto.Draw(gameTime);
+            _spriteBatch.End();
             base.Draw(gameTime);
+     
         }
     }
 }
