@@ -7,10 +7,12 @@ namespace InfinityRider.core.riderGame
     class Bike : GameObject
     {
         private Texture2D _texture;
-        private Vector2 Position { get; set; }
+        private Vector2 Position { get; set; } = Vector2.One;
         private float SpeedMove { get; set; }
         private float Rotation { get; set; }
         private float SpeedRotation { get; set; }
+        
+        private Vector2 Velocity { get; set; }  
         public Bike(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
             SpeedMove = 500f;
@@ -58,6 +60,8 @@ namespace InfinityRider.core.riderGame
             {
                 Position = Vector2.Add(Position, new Vector2(0, SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds));
             }
+
+            Position = Vector2.Add(Position, new Vector2(0, 200f * (float)gameTime.ElapsedGameTime.TotalSeconds));
         }
 
         public override void Draw(GameTime gameTime)
