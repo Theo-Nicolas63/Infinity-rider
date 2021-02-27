@@ -11,13 +11,13 @@ namespace InfinityRider.core.riderGame
         private GraphicsDevice _device;
         private int _screenWidth;
         private int _screenHeight;
-        private int[] _terrainContour;
         private Texture2D _foregroundTexture;
         private Random _randomizer = new Random();
         private readonly double[] randoms = new double[3];
         private float SpeedMove { get; set; } = 0;
-        private float MapPosition { get; set; } = 0;
         public Color MapColor { get; set; } = Color.Green;
+        private RoadManager Road { get; set; }
+        private int[] _terrainContour;
 
         public RoadConstructor(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
@@ -32,33 +32,42 @@ namespace InfinityRider.core.riderGame
 
         private void GenerateTerrainContour()
         {
-            _terrainContour = new int[_screenWidth];
+            /*
+                        _terrainContour = new int[_screenWidth];
 
-            float offset = _screenHeight * 5 / 8;
-            float peakheight = 75;
-            float flatness = 200;
+                        float offset = _screenHeight * 5 / 8;   // Sets the position of the midheight of the wave
+                        float peakheight = 75;                  // Defines how high the wave will be
+                        float flatness = 200;                   // Has an impact on the influence of X, which slows down or speeds up the wave
 
-            for(int i = 0; i < _screenWidth; i++)
+                        for (int i = 0; i < _screenWidth; i++)
+                        {
+                            double height = offset;
+                            for(int d = 0; d < randoms.Length; d++)
+                            {
+                                height += peakheight / randoms[d] * Math.Sin((float) (i + MapPosition) / flatness * randoms[d] + randoms[d]);
+                            }
+
+                            _terrainContour[i] = (int)height;
+                        }
+            */
+
+            if (Road == null)
             {
-                double height = offset;
-                for(int d = 0; d < randoms.Length; d++)
-                {
-                    height += peakheight / randoms[d] * Math.Sin((float) (i + MapPosition) / flatness * randoms[d] + randoms[d]);
-                }
-
-                _terrainContour[i] = (int)height;
+                Road = new RoadManager(_screenHeight * 5 / 8, 75, 200);
+                Road.InitializeRoad();
             }
+            _terrainContour = Road.GetCurrentRoad(_screenWidth);
         }
 
         private void CreateForeGround()
         {
             Color[] foreGroundColors = new Color[_screenWidth * _screenHeight];
 
-            for(int x = 0; x < _screenWidth; x++)
+            for (int x = 0; x < _screenWidth; x++)
             {
-                for(int y = 0; y < _screenHeight; y++)
+                for (int y = 0; y < _screenHeight; y++)
                 {
-                    if(y > _terrainContour[x] && y < _terrainContour[x] + 10)
+                    if (y > _terrainContour[x] && y < _terrainContour[x] + 10)
                     {
                         foreGroundColors[x + y * _screenWidth] = MapColor;
                     }
@@ -110,12 +119,13 @@ namespace InfinityRider.core.riderGame
             if (keyBoardState.IsKeyDown(Keys.A))
             {
                 SpeedMove = 500f;
-            } else
+            }
+            else
             {
                 SpeedMove = 0;
             }
 
-            MapPosition += SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (Road != null) Road.NextPosition(SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
             if (_game != null)
             {
@@ -133,7 +143,7 @@ namespace InfinityRider.core.riderGame
 
             Rectangle screenRectangle = new Rectangle(0, 0, _screenWidth, _screenHeight);
 
-            if(_foregroundTexture != null)
+            if (_foregroundTexture != null)
             {
                 _spriteBatch.Draw(_foregroundTexture, screenRectangle, Color.White);
             }
