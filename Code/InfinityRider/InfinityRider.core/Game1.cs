@@ -12,6 +12,10 @@ namespace InfinityRider.core
         private SpriteBatch _spriteBatch;
         private IList<GameObject> GameObjects { get; set; } = new List<GameObject>();
 
+        private Level level = new Level();
+        private RoadConstructor road;
+        private Bike bike;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -29,9 +33,9 @@ namespace InfinityRider.core
 
             Background background = new Background(this, _spriteBatch);
             GameObjects.Add(background);
-            RoadConstructor road = new RoadConstructor(this, _spriteBatch);
+            road = new RoadConstructor(this, _spriteBatch);
             GameObjects.Add(road);
-            Bike bike = new Bike(this, _spriteBatch);
+            bike = new Bike(this, _spriteBatch);
             GameObjects.Add(bike);
         }
 
@@ -54,6 +58,7 @@ namespace InfinityRider.core
             }
 
             base.Update(gameTime);
+            level.Update(bike, road);
         }
 
         protected override void Draw(GameTime gameTime)

@@ -7,7 +7,7 @@ namespace InfinityRider.core.riderGame
     class Bike : GameObject
     {
         private Texture2D _texture;
-        private Vector2 Position { get; set; } = Vector2.One;
+        private Vector2 Position { get; set; } = new Vector2(700, 200);
         private float SpeedMove { get; set; }
         private float Rotation { get; set; }
         private float SpeedRotation { get; set; }
@@ -47,14 +47,14 @@ namespace InfinityRider.core.riderGame
             }
 
             //This is to test the keyboard and the bike, but in the game it will not be in the code
-            if(keyBoardState.IsKeyDown(Keys.Left))
-            {
-                Position = Vector2.Add(Position, new Vector2(SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds, 0));
-            }
-            if (keyBoardState.IsKeyDown(Keys.Right))
-            {
-                Position = Vector2.Add(Position, new Vector2(SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds, 0));
-            }
+            //if(keyBoardState.IsKeyDown(Keys.Left))
+            //{
+            //    Position = Vector2.Add(Position, new Vector2(SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds, 0));
+            //}
+            //if (keyBoardState.IsKeyDown(Keys.Right))
+            //{
+            //    Position = Vector2.Add(Position, new Vector2(SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds, 0));
+            //}
             if (keyBoardState.IsKeyDown(Keys.Up))
             {
                 Position = Vector2.Add(Position, new Vector2(0, SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds));
@@ -63,7 +63,7 @@ namespace InfinityRider.core.riderGame
             {
                 Position = Vector2.Add(Position, new Vector2(0, SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds));
             }
-            Position = Vector2.Add(Position, new Vector2(0, 200f * (float)gameTime.ElapsedGameTime.TotalSeconds));
+            applyPhysics(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
@@ -79,6 +79,17 @@ namespace InfinityRider.core.riderGame
                 0f);                                                     // Profondeur
 
             base.Draw(gameTime);
+        }
+
+        public void applyPhysics(GameTime gameTime)
+        {
+            Vector2 previousPosition = Position;
+            Position = Vector2.Add(Position, new Vector2(0, 200f * (float)gameTime.ElapsedGameTime.TotalSeconds));
+        }
+
+        private void HandleCollisions()
+        {
+                       
         }
     }
 }

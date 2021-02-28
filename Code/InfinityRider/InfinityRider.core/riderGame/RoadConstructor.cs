@@ -68,6 +68,11 @@ namespace InfinityRider.core.riderGame
             _foregroundTexture.SetData(foreGroundColors);
         }
 
+        public int[] get_terrainContour()
+        {
+            return this._terrainContour;
+        }
+
         private void loadRandoms()
         {
             randoms[0] = _randomizer.NextDouble() + 1;
