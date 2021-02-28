@@ -12,7 +12,10 @@ namespace InfinityRider.core.riderGame
         private float Rotation { get; set; }
         private float SpeedRotation { get; set; }
         
-        private Vector2 Velocity { get; set; }  
+        private Vector2 Velocity { get; set; }
+
+        private Rectangle BoundingRectangle =>
+            new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
         public Bike(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
             SpeedMove = 500f;
@@ -60,7 +63,6 @@ namespace InfinityRider.core.riderGame
             {
                 Position = Vector2.Add(Position, new Vector2(0, SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds));
             }
-
             Position = Vector2.Add(Position, new Vector2(0, 200f * (float)gameTime.ElapsedGameTime.TotalSeconds));
         }
 
