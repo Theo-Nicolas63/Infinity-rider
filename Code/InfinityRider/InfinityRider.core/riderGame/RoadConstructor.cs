@@ -32,25 +32,6 @@ namespace InfinityRider.core.riderGame
 
         private void GenerateTerrainContour()
         {
-            /*
-                        _terrainContour = new int[_screenWidth];
-
-                        float offset = _screenHeight * 5 / 8;   // Sets the position of the midheight of the wave
-                        float peakheight = 75;                  // Defines how high the wave will be
-                        float flatness = 200;                   // Has an impact on the influence of X, which slows down or speeds up the wave
-
-                        for (int i = 0; i < _screenWidth; i++)
-                        {
-                            double height = offset;
-                            for(int d = 0; d < randoms.Length; d++)
-                            {
-                                height += peakheight / randoms[d] * Math.Sin((float) (i + MapPosition) / flatness * randoms[d] + randoms[d]);
-                            }
-
-                            _terrainContour[i] = (int)height;
-                        }
-            */
-
             if (Road == null)
             {
                 Road = new RoadManager(_screenHeight * 5 / 8, 75, 200);
