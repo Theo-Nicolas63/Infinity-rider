@@ -7,8 +7,6 @@ namespace InfinityRider.core.riderGame
 {
     class RoadConstructor : GameObject
     {
-        private Game _game;
-        private GraphicsDevice _device;
         private int _screenWidth;
         private int _screenHeight;
         private Texture2D _foregroundTexture;
@@ -21,8 +19,6 @@ namespace InfinityRider.core.riderGame
 
         public RoadConstructor(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
-            _game = game;
-            _device = game.GraphicsDevice;
         }
 
         public override void Initialize()
@@ -83,7 +79,7 @@ namespace InfinityRider.core.riderGame
 
             loadRandoms();
 
-            if (_game != null)
+            if (_device != null)
             {
                 _screenWidth = _device.Viewport.Width;
                 _screenHeight = _device.Viewport.Height;

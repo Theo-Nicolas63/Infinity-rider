@@ -13,7 +13,6 @@ namespace InfinityRider.core.riderGame
         public const string PLANET_RED = "PlanetRed";
         public const string SOLAR_SYSTEM = "SolarSystem";
 
-        private Game _game;
         private int _width;
         private int _height;
         private string _backgroundName;
@@ -22,7 +21,6 @@ namespace InfinityRider.core.riderGame
 
         public Background(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch, string backgroundName = BURNING_PLANET_RED) : base(game, spriteBatch)
         {
-            _game = game;
             _backgroundName = backgroundName;
         }
 
