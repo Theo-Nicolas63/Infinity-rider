@@ -51,7 +51,7 @@ namespace InfinityRider.core
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+                pauseGame();
 
             // TODO: Add your update logic here
 
@@ -67,16 +67,24 @@ namespace InfinityRider.core
                     }
                     break;
                 case GameStatus.PAUSED:
-                    //Menu Pause
+                    _mainMenu.Update(gameTime);
                     break;
                 case GameStatus.FINISHED:
-                    //Menu fin
+                    _mainMenu.Update(gameTime);
                     break;
             }
 
-
-
             base.Update(gameTime);
+        }
+
+        private void pauseGame()
+        {
+            if(Status == GameStatus.PROCESSING)
+            {
+                Status = GameStatus.PAUSED;
+                _mainMenu.Status = StatusMenu.PAUSE;
+                _mainMenu.wasEscapeKeyDownBefore = true;
+            }
         }
 
         protected override void Draw(GameTime gameTime)

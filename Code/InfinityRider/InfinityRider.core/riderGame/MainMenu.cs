@@ -2,6 +2,7 @@
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,8 +22,9 @@ namespace InfinityRider.core.riderGame
         private IMGUI _ui;
         private int _width;
         private int _height;
-        public StatusMenu Status { get; private set; } = StatusMenu.MAIN;
+        public StatusMenu Status { get; set; } = StatusMenu.MAIN;
         private StatusMenu oldStatus = StatusMenu.MAIN;
+        public bool wasEscapeKeyDownBefore = false;
 
         public MainMenu(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
@@ -54,30 +56,109 @@ namespace InfinityRider.core.riderGame
             switch(Status)
             {
                 case StatusMenu.MAIN:
-                    updateButtonStart();
-                    updateButtonSettings();
-                    updateButtonQuit();
+                    updateMain();
                     break;
                 case StatusMenu.PAUSE:
-                    resumeButtonBack();
-                    updateButtonSettings();
-                    updateButtonQuit();
+                    updatePause();
                     break;
                 case StatusMenu.SETTINGS:
-                    updateButtonBack();
+                    updateSettings();
                     break;
                 case StatusMenu.QUIT:
-                    updateButtonQuit();
-                    updateButtonBack();
+                    updateQuit();
                     break;
             }
-
-
 
             Panel.Pop();
 
             // Call UpdateCleanup at the end.
             GuiHelper.UpdateCleanup();
+        }
+
+        private void updateMain()
+        {
+            updateButtonStart();
+            updateButtonSettings();
+            updateButtonQuit();
+
+            var keyBoardState = Keyboard.GetState();
+
+            if (keyBoardState.IsKeyDown(Keys.Escape))
+            {
+                if(!wasEscapeKeyDownBefore)
+                {
+                    oldStatus = Status;
+                    Status = StatusMenu.QUIT;
+                    wasEscapeKeyDownBefore = true;
+                }
+            }
+            else
+            {
+                wasEscapeKeyDownBefore = false;
+            }
+        }
+
+        private void updatePause()
+        {
+            updateButtonResume();
+            updateButtonSettings();
+            updateButtonQuit();
+
+            var keyBoardState = Keyboard.GetState();
+
+            if (keyBoardState.IsKeyDown(Keys.Escape))
+            {
+                if (!wasEscapeKeyDownBefore)
+                {
+                    oldStatus = Status;
+                    Status = StatusMenu.QUIT;
+                    wasEscapeKeyDownBefore = true;
+                }
+            }
+            else
+            {
+                wasEscapeKeyDownBefore = false;
+            }
+        }
+
+        private void updateSettings()
+        {
+            updateButtonBack();
+
+            var keyBoardState = Keyboard.GetState();
+
+            if (keyBoardState.IsKeyDown(Keys.Escape))
+            {
+                if (!wasEscapeKeyDownBefore)
+                {
+                    Status = oldStatus;
+                    wasEscapeKeyDownBefore = true;
+                }
+            }
+            else
+            {
+                wasEscapeKeyDownBefore = false;
+            }
+        }
+
+        private void updateQuit()
+        {
+            updateButtonQuit();
+            updateButtonBack();
+
+            var keyBoardState = Keyboard.GetState();
+
+            if (keyBoardState.IsKeyDown(Keys.Escape))
+            {
+                if (!wasEscapeKeyDownBefore)
+                {
+                    _game.Exit();
+                }
+            } 
+            else
+            {
+                wasEscapeKeyDownBefore = false;
+            }
         }
 
         private void updateButtonStart()
@@ -96,12 +177,7 @@ namespace InfinityRider.core.riderGame
 
             if (quitButton.Clicked)
             {
-                if (Status == StatusMenu.MAIN)
-                {
-                    oldStatus = Status;
-                    Status = StatusMenu.QUIT;
-                }
-                else if(Status == StatusMenu.PAUSE)
+                if (Status == StatusMenu.MAIN || Status == StatusMenu.PAUSE)
                 {
                     oldStatus = Status;
                     Status = StatusMenu.QUIT;
@@ -133,7 +209,7 @@ namespace InfinityRider.core.riderGame
             }
         }
 
-        private void resumeButtonBack()
+        private void updateButtonResume()
         {
             Button resumeButton = Button.Put("Resume");
 
