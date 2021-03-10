@@ -11,16 +11,22 @@ namespace InfinityRider.core.riderGame
         private float SpeedMove { get; set; }
         private float Rotation { get; set; }
         private float SpeedRotation { get; set; }
-        
+   
         private Vector2 Velocity { get; set; }
 
-        private Rectangle BoundingRectangle =>
+        private Level _level;
+
+
+
+        public Rectangle BoundingRectangle =>
             new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
-        public Bike(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
+        public Bike(Level level, Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
             SpeedMove = 500f;
             Rotation = 0f;
             SpeedRotation = 9f;
+            _level = level;
+            LoadContent();
         }
 
         public override void Initialize()
@@ -30,14 +36,11 @@ namespace InfinityRider.core.riderGame
 
         protected override void LoadContent()
         {
-            base.LoadContent();
             _texture = Game.Content.Load<Texture2D>("bikes/Bike 1");
         }
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
-
             var keyBoardState = Keyboard.GetState();
 
             if(keyBoardState.IsKeyDown(Keys.Space))
@@ -57,16 +60,20 @@ namespace InfinityRider.core.riderGame
             //}
             if (keyBoardState.IsKeyDown(Keys.Up))
             {
-                Position = Vector2.Add(Position, new Vector2(0, SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds));
+                //Vector2 futurePosition = Vector2.Add(Position, new Vector2(0, SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds));
+                //if (!_level.IsCollision(futurePosition))
+                    Position = Vector2.Add(Position, new Vector2(0, SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds));
             }
             if (keyBoardState.IsKeyDown(Keys.Down))
             {
-                Position = Vector2.Add(Position, new Vector2(0, SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds));
+                Vector2 futurePosition = Vector2.Add(Position, new Vector2(0, SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds));
+                if (!(_level.IsCollision(futurePosition)))
+                    Position = futurePosition;
             }
             applyPhysics(gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
             _spriteBatch.Draw(_texture,                                  // Texture (Image)
                 Position,                                                // Position de l'image
@@ -78,18 +85,14 @@ namespace InfinityRider.core.riderGame
                 SpriteEffects.None,                                      // Effet
                 0f);                                                     // Profondeur
 
-            base.Draw(gameTime);
+                base.Draw(gameTime);
         }
 
         public void applyPhysics(GameTime gameTime)
         {
-            Vector2 previousPosition = Position;
-            Position = Vector2.Add(Position, new Vector2(0, 200f * (float)gameTime.ElapsedGameTime.TotalSeconds));
-        }
-
-        private void HandleCollisions()
-        {
-                       
+            Vector2 futurePosition = Vector2.Add(Position, new Vector2(0, 200f * (float)gameTime.ElapsedGameTime.TotalSeconds));
+            if (!(_level.IsCollision(futurePosition)))
+                this.Position = futurePosition;
         }
     }
 }

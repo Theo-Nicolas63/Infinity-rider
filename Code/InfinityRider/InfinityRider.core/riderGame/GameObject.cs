@@ -12,5 +12,10 @@ namespace InfinityRider.core.riderGame
             _spriteBatch = spriteBatch;
             LoadContent();
         }
+
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+
+        }
     }
 }

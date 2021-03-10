@@ -38,7 +38,7 @@ namespace InfinityRider.core.riderGame
             //_height = _game.Window.ClientBounds.Height;
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             _spriteBatch.Draw(_imageBackground, new Rectangle(0,0,800,480), Color.White);
 

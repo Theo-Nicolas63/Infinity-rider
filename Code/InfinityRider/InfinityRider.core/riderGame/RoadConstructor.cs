@@ -17,9 +17,9 @@ namespace InfinityRider.core.riderGame
         private float SpeedMove { get; set; } = 0;
         public Color MapColor { get; set; } = Color.Green;
         private RoadManager Road { get; set; }
-        private int[] _terrainContour;
+        private int[] TerrainContour;
 
-        public RoadConstructor(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
+        public RoadConstructor(Level level, Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
             _game = game;
             _device = game.GraphicsDevice;
@@ -37,7 +37,7 @@ namespace InfinityRider.core.riderGame
                 Road = new RoadManager(_screenHeight * 5 / 8, 75, 200);
                 Road.InitializeRoad();
             }
-            _terrainContour = Road.GetCurrentRoad(_screenWidth);
+            TerrainContour = Road.GetCurrentRoad(_screenWidth);
         }
 
         private void CreateForeGround()
@@ -48,7 +48,7 @@ namespace InfinityRider.core.riderGame
             {
                 for (int y = 0; y < _screenHeight; y++)
                 {
-                    if (y > _terrainContour[x] && y < _terrainContour[x] + 10)
+                    if (y > TerrainContour[x] && y < TerrainContour[x] + 10)
                     {
                         foreGroundColors[x + y * _screenWidth] = MapColor;
                     }
@@ -57,7 +57,7 @@ namespace InfinityRider.core.riderGame
                         foreGroundColors[x + y * _screenWidth] = Color.Transparent;
                     }
 
-                    if (y >= _terrainContour[x] - 5 && y <= _terrainContour[x] || y >= _terrainContour[x] + 10 && y <= _terrainContour[x] + 15)
+                    if (y >= TerrainContour[x] - 5 && y <= TerrainContour[x] || y >= TerrainContour[x] + 10 && y <= TerrainContour[x] + 15)
                     {
                         foreGroundColors[x + y * _screenWidth] = Color.FromNonPremultiplied(MapColor.R, MapColor.G, MapColor.B, 100);
                     }
@@ -67,10 +67,9 @@ namespace InfinityRider.core.riderGame
             _foregroundTexture = new Texture2D(_device, _screenWidth, _screenHeight, false, SurfaceFormat.Color);
             _foregroundTexture.SetData(foreGroundColors);
         }
-
-        public int[] get_terrainContour()
+        public int getTerrainContour(int index)
         {
-            return this._terrainContour;
+            return this.TerrainContour[index];
         }
 
         private void loadRandoms()
@@ -123,16 +122,16 @@ namespace InfinityRider.core.riderGame
             }
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
-            base.Draw(gameTime);
-
             Rectangle screenRectangle = new Rectangle(0, 0, _screenWidth, _screenHeight);
 
             if (_foregroundTexture != null)
             {
                 _spriteBatch.Draw(_foregroundTexture, screenRectangle, Color.White);
             }
+
+            base.Draw(gameTime);
         }
     }
 }
