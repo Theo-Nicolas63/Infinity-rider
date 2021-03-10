@@ -62,7 +62,7 @@ namespace InfinityRider.core.riderGame
                     updatePause();
                     break;
                 case StatusMenu.SETTINGS:
-                    updateSettings();
+                    updateSettings(gametime);
                     break;
                 case StatusMenu.QUIT:
                     updateQuit();
@@ -73,6 +73,7 @@ namespace InfinityRider.core.riderGame
 
             // Call UpdateCleanup at the end.
             GuiHelper.UpdateCleanup();
+            base.Update(gametime);
         }
 
         private void updateMain()
@@ -121,8 +122,9 @@ namespace InfinityRider.core.riderGame
             }
         }
 
-        private void updateSettings()
+        private void updateSettings(GameTime gametime)
         {
+            updateLabelBackground(gametime);
             updateButtonBack();
 
             var keyBoardState = Keyboard.GetState();
@@ -217,6 +219,19 @@ namespace InfinityRider.core.riderGame
             {
                 ((Game1)_game).LaunchGame();
             }
+        }
+
+        private void updateLabelBackground(GameTime gametime)
+        {
+            Label backgroundLabel = Label.Put("Background");
+
+            Button burningPlanetRed = Button.Put("Burning Planet Red", 66);
+            burningPlanetRed.XY = new Vector2(10, 10);
+            burningPlanetRed.Update(gametime);
+
+            Button earthDoubleLune = Button.Put("Earth Double Lune");
+
+            Button earthLuneBlue = Button.Put("Earth Lune Blue");
         }
 
 
