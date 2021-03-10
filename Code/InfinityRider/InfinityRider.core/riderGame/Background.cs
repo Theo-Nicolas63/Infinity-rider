@@ -1,18 +1,29 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.IO;
 
 namespace InfinityRider.core.riderGame
 {
     class Background : GameObject
     {
+        public const string BURNING_PLANET_RED = "BurningPlanetRed";
+        public const string EARTH_DOUBLE_LUNE = "EarthDoubleLune";
+        public const string EARTH_LUNE_BLUE = "EarthLuneBlue";
+        public const string PLANET_BLUE = "PlanetBlue";
+        public const string PLANET_RED = "PlanetRed";
+        public const string SOLAR_SYSTEM = "SolarSystem";
+
         private Game _game;
         private int _width;
         private int _height;
+        private string _backgroundName;
         private Texture2D _imageBackground;
 
-        public Background(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
+
+        public Background(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch, string backgroundName = BURNING_PLANET_RED) : base(game, spriteBatch)
         {
             _game = game;
+            _backgroundName = backgroundName;
         }
 
         public override void Initialize()
@@ -24,8 +35,10 @@ namespace InfinityRider.core.riderGame
         {
             base.LoadContent();
 
-            _imageBackground = Game.Content.Load<Texture2D>("background/stars");
-
+            string directoy = "backgrounds/";
+            string filePath = Path.Combine(directoy, _backgroundName == null ? BURNING_PLANET_RED : _backgroundName);
+            _imageBackground = Game.Content.Load<Texture2D>(filePath);
+            
         }
 
         public override void Update(GameTime gameTime)
@@ -40,25 +53,7 @@ namespace InfinityRider.core.riderGame
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            _spriteBatch.Draw(_imageBackground, new Rectangle(0,0,800,480), Color.White);
-
-            if(_width > 800)
-            {
-                _spriteBatch.Draw(_imageBackground, new Rectangle(800, 0, 800, 480), Color.White);
-            }
-            if (_height > 480)
-            {
-                _spriteBatch.Draw(_imageBackground, new Rectangle(0, 480, 800, 480), Color.White);
-            }
-            if (_height > 480 && _width > 800)
-            {
-                _spriteBatch.Draw(_imageBackground, new Rectangle(800, 480, 800, 480), Color.White);
-            }
-
-            //We can make the things up more extandable (by calculate modulo of width...
-            //Or do that :
-            //_spriteBatch.Draw(_imageBackground, new Rectangle(0, 0, _width, _height), Color.White);
-
+            _spriteBatch.Draw(_imageBackground, new Rectangle(0,0, _width, _height), Color.White);
 
             base.Draw(gameTime);
         }

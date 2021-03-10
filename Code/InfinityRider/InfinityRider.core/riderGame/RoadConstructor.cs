@@ -34,8 +34,10 @@ namespace InfinityRider.core.riderGame
         {
             if (Road == null)
             {
-                Road = new RoadManager(_screenHeight * 5 / 8, 75, 200);
-                Road.InitializeRoad();
+                float offset = 600 * 5 / 8;
+                float peakHeight = 75;
+                float flatness = 200;
+                Road = new RoadManager(offset, peakHeight, flatness);
             }
             TerrainContour = Road.GetCurrentRoad(_screenWidth);
         }

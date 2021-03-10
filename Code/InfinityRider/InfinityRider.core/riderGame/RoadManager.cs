@@ -6,7 +6,7 @@ namespace InfinityRider.core.riderGame
 {
     class RoadManager
     {
-        public const int ROAD_MINIMUM_SIZE = 1000;
+        public const int ROAD_MINIMUM_SIZE = 10000;
         public const int OPERATOR_DESCENDING = -1;
         public const int OPERATOR_RISING = 1;
         public const int MINIMUM_SIZE_LOAD_BEHIND = 500;
@@ -41,13 +41,15 @@ namespace InfinityRider.core.riderGame
 
             if (randoms == null || randoms.Length == 0) Randoms = LoadSomeRandomsDouble();
             else Randoms = randoms;
+
+            InitializeRoad();
         }
 
         public RoadManager(int[] roadOutline, float offset, float peakHeight, float flatness, int mapPosition) : this(roadOutline, offset, peakHeight, flatness, 0, null) { }
 
         public RoadManager(float offset, float peakHeight, float flatness) : this(new int[ROAD_MINIMUM_SIZE], offset, peakHeight, flatness, 0) { }
 
-        private float getNextChangingOffset()
+        private float GetNextChangingOffset()
         {
             if(movementOffset == OPERATOR_DESCENDING)
             {
@@ -69,7 +71,7 @@ namespace InfinityRider.core.riderGame
             }
         }
 
-        private float getNextChangingPeakHeight()
+        private float GetNextChangingPeakHeight()
         {
             if (movementPeakHeight == OPERATOR_DESCENDING)
             {
@@ -145,15 +147,15 @@ namespace InfinityRider.core.riderGame
             
             for(int i = 0; i < width / widthBetweenMoves; i ++)
             {
-                CreateRoad(widthBetweenMoves, getNextChangingOffset(), getNextChangingPeakHeight(), Flatness, Randoms, i * widthBetweenMoves + position).CopyTo(groundOutline, i* widthBetweenMoves);
+                CreateRoad(widthBetweenMoves, GetNextChangingOffset(), GetNextChangingPeakHeight(), Flatness, Randoms, i * widthBetweenMoves + position).CopyTo(groundOutline, i* widthBetweenMoves);
             }
-            CreateRoad(width % widthBetweenMoves, getNextChangingOffset(), getNextChangingPeakHeight(), Flatness, Randoms, width - width % widthBetweenMoves + position)
+            CreateRoad(width % widthBetweenMoves, GetNextChangingOffset(), GetNextChangingPeakHeight(), Flatness, Randoms, width - width % widthBetweenMoves + position)
                 .CopyTo(groundOutline, width - width % widthBetweenMoves);
 
             return groundOutline;
         }
 
-        public void InitializeRoad()
+        private void InitializeRoad()
         {
             CreateMovingRoad(RoadOutline.Length, 0).CopyTo(RoadOutline, 0);
         }
