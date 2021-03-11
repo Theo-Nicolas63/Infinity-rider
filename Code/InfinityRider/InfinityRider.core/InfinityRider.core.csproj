@@ -11,7 +11,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Apos.Content.Compile" Version="0.1.1" />
+    <PackageReference Include="Apos.Content.Read" Version="0.1.1" />
     <PackageReference Include="Apos.Gui" Version="1.0.2-alpha" />
+    <PackageReference Include="Apos.History" Version="1.1.0" />
     <PackageReference Include="Apos.Input" Version="2.3.2" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641">
       <PrivateAssets>All</PrivateAssets>

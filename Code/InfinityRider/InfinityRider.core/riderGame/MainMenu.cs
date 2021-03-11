@@ -25,6 +25,7 @@ namespace InfinityRider.core.riderGame
         public StatusMenu Status { get; set; } = StatusMenu.MAIN;
         private StatusMenu oldStatus = StatusMenu.MAIN;
         public bool wasEscapeKeyDownBefore = false;
+        private GameTime _gametime;
 
         public MainMenu(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
@@ -43,6 +44,7 @@ namespace InfinityRider.core.riderGame
 
         public override void Update(GameTime gametime)
         {
+            _gametime = gametime;
             // Call UpdateSetup at the start.
             GuiHelper.UpdateSetup();
             _ui.UpdateAll(gametime);
@@ -51,9 +53,11 @@ namespace InfinityRider.core.riderGame
             _height = _game.GraphicsDevice.Viewport.Height;
 
             // Create your UI.
-            Panel.Put().XY = new Vector2(_width / 2, _height / 2);
-
-            switch(Status)
+            Panel p = Panel.Put();
+            
+            
+            
+            switch (Status)
             {
                 case StatusMenu.MAIN:
                     updateMain();
@@ -62,7 +66,7 @@ namespace InfinityRider.core.riderGame
                     updatePause();
                     break;
                 case StatusMenu.SETTINGS:
-                    updateSettings(gametime);
+                    updateSettings();
                     break;
                 case StatusMenu.QUIT:
                     updateQuit();
@@ -122,9 +126,9 @@ namespace InfinityRider.core.riderGame
             }
         }
 
-        private void updateSettings(GameTime gametime)
+        private void updateSettings()
         {
-            updateLabelBackground(gametime);
+            updateLabelBackground(_gametime);
             updateButtonBack();
 
             var keyBoardState = Keyboard.GetState();
