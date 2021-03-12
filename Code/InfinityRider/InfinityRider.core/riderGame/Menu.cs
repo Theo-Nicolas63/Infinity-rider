@@ -1,14 +1,16 @@
-﻿using System;
-using Apos.Gui;
+﻿using Apos.Gui;
+using FontStashSharp;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Optional;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace GameProject
+namespace InfinityRider.core.riderGame
 {
-    /// <summary>
-    /// Interface to modify the game settings.
-    /// </summary>
     class Menu
     {
         public Menu()

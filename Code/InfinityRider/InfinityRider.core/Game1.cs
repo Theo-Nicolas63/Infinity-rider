@@ -14,7 +14,7 @@ namespace InfinityRider.core
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private IList<GameObject> GameObjects { get; set; } = new List<GameObject>();
-        private MainMenu _mainMenu;
+        private Menu _menu;
         public GameStatus Status { get; private set; } = GameStatus.NOTSTART;
 
         public Game1()
@@ -30,6 +30,17 @@ namespace InfinityRider.core
 
             base.Initialize();
 
+            Utility.Settings = new Settings();
+            Utility.Game = this;
+            Utility.Graphics = _graphics;
+
+            _graphics.PreferredBackBufferWidth = Utility.Settings.Width;
+            _graphics.PreferredBackBufferHeight = Utility.Settings.Height;
+            _graphics.ApplyChanges();
+
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += WindowClientChanged;
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Background background = new Background(this, _spriteBatch);
@@ -38,12 +49,19 @@ namespace InfinityRider.core
             GameObjects.Add(road);
             Bike bike = new Bike(this, _spriteBatch);
             GameObjects.Add(bike);
-            _mainMenu = new MainMenu(this, _spriteBatch);
         }
+
+        private void WindowClientChanged(object sender, EventArgs e) { }
+
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            FontSystem font = Content.Load<FontSystem>("Fonts\\Allura-Regular.otf");
+
+            GuiHelper.Setup(this, font);
+            _menu = new Menu();
 
             // TODO: use this.Content to load your game content here
         }
@@ -54,7 +72,14 @@ namespace InfinityRider.core
                 pauseGame();
 
             // TODO: Add your update logic here
+            GuiHelper.UpdateSetup();
 
+            _menu.UpdateSetup();
+            _menu.UpdateInput();
+            _menu.Update();
+
+            GuiHelper.UpdateCleanup();
+            /*
             switch (Status)
             {
                 case GameStatus.NOTSTART:
@@ -72,19 +97,19 @@ namespace InfinityRider.core
                 case GameStatus.FINISHED:
                     _mainMenu.Update(gameTime);
                     break;
-            }
+            }*/
 
             base.Update(gameTime);
         }
 
         private void pauseGame()
-        {
+        {/*
             if(Status == GameStatus.PROCESSING)
             {
                 Status = GameStatus.PAUSED;
                 _mainMenu.Status = StatusMenu.PAUSE;
                 _mainMenu.wasEscapeKeyDownBefore = true;
-            }
+            }*/
         }
 
         protected override void Draw(GameTime gameTime)
@@ -92,7 +117,9 @@ namespace InfinityRider.core
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _menu.DrawUI();
 
+            /*
             switch (Status)
             {
                 case GameStatus.NOTSTART:
@@ -108,7 +135,7 @@ namespace InfinityRider.core
                     }
                     _spriteBatch.End();
                     break;
-            }
+            }*/
 
             base.Draw(gameTime);
         }
