@@ -4,8 +4,10 @@ using System.IO;
 
 namespace InfinityRider.core.riderGame
 {
-    class Background : GameObject
+    public class Background : GameObject
     {
+        private const string DIRECTORY = "backgrounds/";
+
         public const string BURNING_PLANET_RED = "BurningPlanetRed";
         public const string EARTH_DOUBLE_LUNE = "EarthDoubleLune";
         public const string EARTH_LUNE_BLUE = "EarthLuneBlue";
@@ -15,13 +17,13 @@ namespace InfinityRider.core.riderGame
 
         private int _width;
         private int _height;
-        private string _backgroundName;
+        public string BackgroundName { get; private set; }
         private Texture2D _imageBackground;
 
 
         public Background(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch, string backgroundName = BURNING_PLANET_RED) : base(game, spriteBatch)
         {
-            _backgroundName = backgroundName;
+            BackgroundName = backgroundName;
         }
 
         public override void Initialize()
@@ -33,10 +35,18 @@ namespace InfinityRider.core.riderGame
         {
             base.LoadContent();
 
-            string directoy = "backgrounds/";
-            string filePath = Path.Combine(directoy, _backgroundName == null ? BURNING_PLANET_RED : _backgroundName);
+            string filePath = Path.Combine(DIRECTORY, BackgroundName == null ? BURNING_PLANET_RED : BackgroundName);
             _imageBackground = Game.Content.Load<Texture2D>(filePath);
-            
+        }
+
+        public void changeBackground(string background)
+        {
+            if (background == null || background != BURNING_PLANET_RED && background != EARTH_DOUBLE_LUNE && background != EARTH_LUNE_BLUE &&
+                background != PLANET_BLUE && background != PLANET_RED && background != SOLAR_SYSTEM) return;
+
+            BackgroundName = background;
+
+            _imageBackground = Game.Content.Load<Texture2D>(Path.Combine(DIRECTORY, BackgroundName));
         }
 
         public override void Update(GameTime gameTime)

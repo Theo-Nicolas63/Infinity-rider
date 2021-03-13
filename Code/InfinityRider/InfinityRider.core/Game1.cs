@@ -12,10 +12,9 @@ namespace InfinityRider.core
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
         private IList<GameObject> GameObjects { get; set; } = new List<GameObject>();
         private Menu _menu;
-        public GameStatus Status { get; private set; } = GameStatus.NOTSTART;
+        public Background GameBackground { get; private set; }
 
         public Game1()
         {
@@ -28,8 +27,6 @@ namespace InfinityRider.core
         {
             // TODO: Add your initialization logic here
 
-            base.Initialize();
-
             Utility.Settings = new Settings();
             Utility.Game = this;
             Utility.Graphics = _graphics;
@@ -41,26 +38,28 @@ namespace InfinityRider.core
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += WindowClientChanged;
 
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            Utility.SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Background background = new Background(this, _spriteBatch);
-            GameObjects.Add(background);
-            RoadConstructor road = new RoadConstructor(this, _spriteBatch);
-            GameObjects.Add(road);
-            Bike bike = new Bike(this, _spriteBatch);
-            GameObjects.Add(bike);
+            Utility.Background = new Background(this, Utility.SpriteBatch);
+            GameObjects.Add(Utility.Background);
+            Utility.RoadConstructor = new RoadConstructor(this, Utility.SpriteBatch);
+            GameObjects.Add(Utility.RoadConstructor);
+            Utility.Bike = new Bike(this, Utility.SpriteBatch);
+            GameObjects.Add(Utility.Bike);
+
+            base.Initialize();
         }
 
         private void WindowClientChanged(object sender, EventArgs e) { }
 
-
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            Utility.SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            FontSystem font = Content.Load<FontSystem>("Fonts\\Allura-Regular.otf");
+            FontSystem fontSystem = FontSystemFactory.Create(GraphicsDevice, 2048, 2048);
+            fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/Fonts/Allura-Regular.otf"));
 
-            GuiHelper.Setup(this, font);
+            GuiHelper.Setup(this, fontSystem);
             _menu = new Menu();
 
             // TODO: use this.Content to load your game content here
@@ -72,18 +71,14 @@ namespace InfinityRider.core
                 pauseGame();
 
             // TODO: Add your update logic here
-            GuiHelper.UpdateSetup();
 
-            _menu.UpdateSetup();
-            _menu.UpdateInput();
-            _menu.Update();
-
-            GuiHelper.UpdateCleanup();
-            /*
-            switch (Status)
+            
+            switch (Utility.GameStatus)
             {
                 case GameStatus.NOTSTART:
-                    _mainMenu.Update(gameTime);
+                case GameStatus.PAUSED:
+                case GameStatus.FINISHED:
+                    UpdateMenu();
                     break;
                 case GameStatus.PROCESSING:
                     foreach (var gameObject in GameObjects)
@@ -91,25 +86,20 @@ namespace InfinityRider.core
                         gameObject.Update(gameTime);
                     }
                     break;
-                case GameStatus.PAUSED:
-                    _mainMenu.Update(gameTime);
-                    break;
-                case GameStatus.FINISHED:
-                    _mainMenu.Update(gameTime);
-                    break;
-            }*/
+            }
 
             base.Update(gameTime);
         }
 
-        private void pauseGame()
-        {/*
-            if(Status == GameStatus.PROCESSING)
-            {
-                Status = GameStatus.PAUSED;
-                _mainMenu.Status = StatusMenu.PAUSE;
-                _mainMenu.wasEscapeKeyDownBefore = true;
-            }*/
+        private void UpdateMenu()
+        {
+            GuiHelper.UpdateSetup();
+
+            _menu.UpdateSetup();
+            _menu.UpdateInput();
+            _menu.Update();
+
+            GuiHelper.UpdateCleanup();
         }
 
         protected override void Draw(GameTime gameTime)
@@ -117,47 +107,55 @@ namespace InfinityRider.core
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            _menu.DrawUI();
+            Utility.SpriteBatch.Begin();
 
-            /*
-            switch (Status)
+            switch (Utility.GameStatus)
             {
                 case GameStatus.NOTSTART:
                 case GameStatus.PAUSED:
                 case GameStatus.FINISHED:
-                    _mainMenu.Draw(gameTime);
+                    _menu.DrawUI();
                     break;
                 case GameStatus.PROCESSING:
-                    _spriteBatch.Begin();
                     foreach (var gameObject in GameObjects)
                     {
                         gameObject.Draw(gameTime);
                     }
-                    _spriteBatch.End();
                     break;
-            }*/
+            }
+            
+            Utility.SpriteBatch.End();
 
             base.Draw(gameTime);
         }
 
         public void LaunchGame()
         {
-            Status = GameStatus.PROCESSING;
+            _menu.UpdateStateMenu();
+            Utility.GameStatus = GameStatus.PROCESSING;
         }
 
-        public void PauseGame()
+        private void pauseGame()
         {
-            Status = GameStatus.PAUSED;
+            if (Utility.GameStatus == GameStatus.PROCESSING)
+            {
+                _menu.UpdateStateMenu();
+                Utility.GameStatus = GameStatus.PAUSED;
+                //_mainMenu.wasEscapeKeyDownBefore = true;
+            }
         }
 
         public void EndGame()
         {
-            Status = GameStatus.FINISHED;
+            _menu.UpdateStateMenu();
+            Utility.GameStatus = GameStatus.FINISHED;
         }
 
         public void ReLaunchGame()
         {
-            Status = GameStatus.NOTSTART;
+            //TODO : Continue this method
+            _menu.UpdateStateMenu();
+            Utility.GameStatus = GameStatus.NOTSTART;
         }
     }
 }

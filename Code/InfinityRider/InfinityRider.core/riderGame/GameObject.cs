@@ -5,7 +5,7 @@ namespace InfinityRider.core.riderGame
 {
     public class GameObject : DrawableGameComponent
     {
-        protected readonly SpriteBatch _spriteBatch;
+        protected SpriteBatch _spriteBatch => Utility.SpriteBatch;
         protected Game _game;
         protected GraphicsDevice _device;
 
@@ -13,7 +13,6 @@ namespace InfinityRider.core.riderGame
         {
             _game = game;
             _device = game.GraphicsDevice;
-            _spriteBatch = spriteBatch;
             LoadContent();
         }
     }
