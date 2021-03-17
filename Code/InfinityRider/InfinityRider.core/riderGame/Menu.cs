@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Optional;
 using System;
+using System.Collections.Generic;
+using static InfinityRider.core.riderGame.Background;
 
 namespace InfinityRider.core.riderGame
 {
@@ -28,7 +30,8 @@ namespace InfinityRider.core.riderGame
             menuSwitch = new Switcher<MenuScreens>();
 
             menuSwitch.Add(MenuScreens.Main, setupMainMenu());
-            menuSwitch.Add(MenuScreens.Pause, setupMainMenu());
+            menuSwitch.Add(MenuScreens.Pause, setupPauseMenu());
+            menuSwitch.Add(MenuScreens.Finish, setupFinishMenu());
             menuSwitch.Add(MenuScreens.Settings, setupSettingsMenu());
             menuSwitch.Add(MenuScreens.Background, setupBackgroundsMenu());
             menuSwitch.Add(MenuScreens.Graphics, setupGraphicsMenu());
@@ -42,6 +45,14 @@ namespace InfinityRider.core.riderGame
         }
         ComponentFocus menuFocus;
         Switcher<MenuScreens> menuSwitch;
+        LinkedList<MenuScreens> oldMenu = new LinkedList<MenuScreens>();
+
+        private void setupButtonsNewGameSettingsQuit(Panel p)
+        {
+            p.Add(Default.CreateButton("New Game", c => { Utility.Game.ReLaunchGame(); }, menuFocus.GrabFocus));
+            p.Add(Default.CreateButton("Settings", c => { selectMenu(MenuScreens.Settings); }, menuFocus.GrabFocus));
+            p.Add(Default.CreateButton("Quit", c => { selectMenu(MenuScreens.Quit); }, menuFocus.GrabFocus));
+        }
 
         private Component setupMainMenu()
         {
@@ -52,14 +63,38 @@ namespace InfinityRider.core.riderGame
 
             p.Add(createTitle("Infinity Rider"));
 
-            if(menuSwitch.Key.ValueOr(MenuScreens.Main) != MenuScreens.Finish)
-            {
-                p.Add(Default.CreateButton(menuSwitch.Key.ValueOr(MenuScreens.Main) == MenuScreens.Main ? "Start Game" : "Resume Game",
-                    c => { Utility.Game.LaunchGame(); }, menuFocus.GrabFocus));
-            }
-            p.Add(Default.CreateButton("New Game", c => { Utility.Game.ReLaunchGame(); }, menuFocus.GrabFocus));
-            p.Add(Default.CreateButton("Settings", c => { selectMenu(MenuScreens.Settings); }, menuFocus.GrabFocus));
-            p.Add(Default.CreateButton("Quit", c => { selectMenu(MenuScreens.Quit); }, menuFocus.GrabFocus));
+            setupButtonsNewGameSettingsQuit(p);
+
+            return p;
+        }
+
+        private Component setupPauseMenu()
+        {
+            Panel p = new Panel();
+            p.Layout = new LayoutVerticalCenter();
+            p.AddHoverCondition(Default.ConditionMouseHover);
+            p.AddAction(Default.IsScrolled, Default.ScrollVertically);
+
+            p.Add(createTitle("Infinity Rider"));
+            p.Add(createTitle("Game paused"));
+
+            p.Add(Default.CreateButton("Resume Game", c => { Utility.Game.LaunchGame(); }, menuFocus.GrabFocus));
+            setupButtonsNewGameSettingsQuit(p);
+
+            return p;
+        }
+
+        private Component setupFinishMenu()
+        {
+            Panel p = new Panel();
+            p.Layout = new LayoutVerticalCenter();
+            p.AddHoverCondition(Default.ConditionMouseHover);
+            p.AddAction(Default.IsScrolled, Default.ScrollVertically);
+
+            p.Add(createTitle("Infinity Rider"));
+            p.Add(createTitle("Game finished"));
+
+            setupButtonsNewGameSettingsQuit(p);
 
             return p;
         }
@@ -79,10 +114,21 @@ namespace InfinityRider.core.riderGame
                 selectMenu(MenuScreens.Graphics);
             }, menuFocus.GrabFocus));
             p.Add(Default.CreateButton("Back", c => {
-                selectMenu(MenuScreens.Main);
+                selectOldMenu();
             }, menuFocus.GrabFocus));
 
             return p;
+        }
+
+        private void addButtonBackgroundImage(Panel p, string background)
+        {
+            if (!BackgroundImage.isExist(background)) return;
+            Component Component_background = Default.CreateButton(BackgroundImage.getHumanName(background), c =>
+            {
+                GuiHelper.NextLoopActions.Add(() => { Utility.Background.changeBackground(background); });
+            }, menuFocus.GrabFocus);
+            Component_background.IsFocused = Utility.Background.BackgroundName == background ? true : false;
+            p.Add(Component_background);
         }
 
         private Component setupBackgroundsMenu()
@@ -94,46 +140,17 @@ namespace InfinityRider.core.riderGame
 
             p.Add(createTitle("Background Settings"));
 
-            Component Component_BURNING_PLANET_RED = Default.CreateButton("Red burning planet", c =>
-            {
-                GuiHelper.NextLoopActions.Add(() => { Utility.Background.changeBackground(Background.BURNING_PLANET_RED); });
-            }, menuFocus.GrabFocus);
-            Component_BURNING_PLANET_RED.IsFocused = Utility.Background.BackgroundName == Background.BURNING_PLANET_RED ? true : false;
-            p.Add(Component_BURNING_PLANET_RED);
+            p.Add(createTitle("Selected : " + BackgroundImage.getHumanName(Utility.Background.BackgroundName)));
 
-            Component Component_EARTH_DOUBLE_LUNE = Default.CreateButton("Earth and double Lune", c =>
-            {
-                GuiHelper.NextLoopActions.Add(() => { Utility.Background.changeBackground(Background.EARTH_DOUBLE_LUNE); });
-            }, menuFocus.GrabFocus);
-            Component_EARTH_DOUBLE_LUNE.IsFocused = Utility.Background.BackgroundName == Background.EARTH_DOUBLE_LUNE ? true : false;
-            p.Add(Component_EARTH_DOUBLE_LUNE);
-
-            Component Component_EARTH_LUNE_BLUE = Default.CreateButton("Blue Earth and Lune", c => {
-                GuiHelper.NextLoopActions.Add(() => { Utility.Background.changeBackground(Background.EARTH_LUNE_BLUE); });
-            }, menuFocus.GrabFocus);
-            Component_EARTH_LUNE_BLUE.IsFocused = Utility.Background.BackgroundName == Background.EARTH_LUNE_BLUE ? true : false;
-            p.Add(Component_EARTH_LUNE_BLUE);
-
-            Component Component_PLANET_BLUE = Default.CreateButton("Blue planet", c => {
-                GuiHelper.NextLoopActions.Add(() => { Utility.Background.changeBackground(Background.PLANET_BLUE); });
-            }, menuFocus.GrabFocus);
-            Component_PLANET_BLUE.IsFocused = Utility.Background.BackgroundName == Background.PLANET_BLUE ? true : false;
-            p.Add(Component_PLANET_BLUE);
-
-            Component Component_PLANET_RED = Default.CreateButton("Red planet", c => {
-                GuiHelper.NextLoopActions.Add(() => { Utility.Background.changeBackground(Background.PLANET_RED); });
-            }, menuFocus.GrabFocus);
-            Component_PLANET_RED.IsFocused = Utility.Background.BackgroundName == Background.PLANET_RED ? true : false;
-            p.Add(Component_PLANET_RED);
-
-            Component Component_SOLAR_SYSTEM = Default.CreateButton("Solar System", c => {
-                GuiHelper.NextLoopActions.Add(() => { Utility.Background.changeBackground(Background.SOLAR_SYSTEM); });
-            }, menuFocus.GrabFocus);
-            Component_SOLAR_SYSTEM.IsFocused = Utility.Background.BackgroundName == Background.SOLAR_SYSTEM ? true : false;
-            p.Add(Component_SOLAR_SYSTEM);
+            addButtonBackgroundImage(p, BackgroundImage.BURNING_PLANET_RED);
+            addButtonBackgroundImage(p, BackgroundImage.EARTH_DOUBLE_LUNE);
+            addButtonBackgroundImage(p, BackgroundImage.EARTH_LUNE_BLUE);
+            addButtonBackgroundImage(p, BackgroundImage.PLANET_BLUE);
+            addButtonBackgroundImage(p, BackgroundImage.PLANET_RED);
+            addButtonBackgroundImage(p, BackgroundImage.SOLAR_SYSTEM);
 
             p.Add(Default.CreateButton("Back", c => {
-                selectMenu(MenuScreens.Settings);
+                selectOldMenu();
             }, menuFocus.GrabFocus));
 
             return p;
@@ -181,7 +198,7 @@ namespace InfinityRider.core.riderGame
                 GuiHelper.NextLoopActions.Add(() => { GuiHelper.Scale = 4f; });
             }, menuFocus.GrabFocus));
             p.Add(Default.CreateButton("Back", c => {
-                selectMenu(MenuScreens.Settings);
+                selectOldMenu();
             }, menuFocus.GrabFocus));
 
             return p;
@@ -199,7 +216,7 @@ namespace InfinityRider.core.riderGame
                 Utility.Game.Exit();
             }, menuFocus.GrabFocus));
             p.Add(Default.CreateButton("No", c => {
-                selectMenu(MenuScreens.Main);
+                selectOldMenu();
             }, menuFocus.GrabFocus));
 
             return p;
@@ -222,12 +239,35 @@ namespace InfinityRider.core.riderGame
             }
         }
 
+        public void updateCurrentMenu()
+        {
+            selectMenuWithoutSaveOld(menuSwitch.Key.ValueOr(MenuScreens.Main));
+        }
+
         private void selectMenu(MenuScreens key)
+        {
+            oldMenu.AddFirst(menuSwitch.Key.ValueOr(MenuScreens.Main));
+            selectMenuWithoutSaveOld(key);
+        }
+
+        private void selectMenuWithoutSaveOld(MenuScreens key)
         {
             GuiHelper.NextLoopActions.Add(() => {
                 menuSwitch.Key = Option.Some(key);
                 menuFocus.Focus = menuSwitch;
             });
+        }
+
+        private void selectOldMenu()
+        {
+            var oldMenuLinked = oldMenu.First;
+            MenuScreens old = MenuScreens.Main;
+            if(oldMenuLinked != null)
+            {
+                old = oldMenuLinked.Value;
+                oldMenu.RemoveFirst();
+            }
+            selectMenuWithoutSaveOld(old);
         }
 
         public void UpdateSetup()
@@ -245,7 +285,7 @@ namespace InfinityRider.core.riderGame
                 }
                 else
                 {
-                    selectMenu(MenuScreens.Main);
+                    UpdateStateMenu();
                 }
             }
 

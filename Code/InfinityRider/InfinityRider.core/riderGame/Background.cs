@@ -4,16 +4,55 @@ using System.IO;
 
 namespace InfinityRider.core.riderGame
 {
+
     public class Background : GameObject
     {
-        private const string DIRECTORY = "backgrounds/";
+        public class BackgroundImage
+        {
+            public const string BURNING_PLANET_RED = "BurningPlanetRed";
+            public const string EARTH_DOUBLE_LUNE = "EarthDoubleLune";
+            public const string EARTH_LUNE_BLUE = "EarthLuneBlue";
+            public const string PLANET_BLUE = "PlanetBlue";
+            public const string PLANET_RED = "PlanetRed";
+            public const string SOLAR_SYSTEM = "SolarSystem";
 
-        public const string BURNING_PLANET_RED = "BurningPlanetRed";
-        public const string EARTH_DOUBLE_LUNE = "EarthDoubleLune";
-        public const string EARTH_LUNE_BLUE = "EarthLuneBlue";
-        public const string PLANET_BLUE = "PlanetBlue";
-        public const string PLANET_RED = "PlanetRed";
-        public const string SOLAR_SYSTEM = "SolarSystem";
+            public static bool isExist(string background)
+            {
+                switch (background)
+                {
+                    case BURNING_PLANET_RED:
+                    case EARTH_DOUBLE_LUNE:
+                    case EARTH_LUNE_BLUE:
+                    case PLANET_BLUE:
+                    case PLANET_RED:
+                    case SOLAR_SYSTEM:
+                        return true;
+                }
+                return false;
+            }
+
+            public static string getHumanName(string background)
+            {
+                switch(background)
+                {
+                    case BURNING_PLANET_RED:
+                        return "Red burning planet";
+                    case EARTH_DOUBLE_LUNE:
+                        return "Earth and double Lune";
+                    case EARTH_LUNE_BLUE:
+                        return "Blue Earth and Lune";
+                    case PLANET_BLUE:
+                        return "Blue planet";
+                    case PLANET_RED:
+                        return "Red planet";
+                    case SOLAR_SYSTEM:
+                        return "Solar System";
+                }
+                return "Not known";
+            }
+        }
+
+        private const string DIRECTORY = "backgrounds/";
 
         private int _width;
         private int _height;
@@ -21,7 +60,7 @@ namespace InfinityRider.core.riderGame
         private Texture2D _imageBackground;
 
 
-        public Background(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch, string backgroundName = BURNING_PLANET_RED) : base(game, spriteBatch)
+        public Background(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch, string backgroundName = BackgroundImage.BURNING_PLANET_RED) : base(game, spriteBatch)
         {
             BackgroundName = backgroundName;
         }
@@ -35,14 +74,13 @@ namespace InfinityRider.core.riderGame
         {
             base.LoadContent();
 
-            string filePath = Path.Combine(DIRECTORY, BackgroundName == null ? BURNING_PLANET_RED : BackgroundName);
+            string filePath = Path.Combine(DIRECTORY, BackgroundName == null ? BackgroundImage.BURNING_PLANET_RED : BackgroundName);
             _imageBackground = Game.Content.Load<Texture2D>(filePath);
         }
 
         public void changeBackground(string background)
         {
-            if (background == null || background != BURNING_PLANET_RED && background != EARTH_DOUBLE_LUNE && background != EARTH_LUNE_BLUE &&
-                background != PLANET_BLUE && background != PLANET_RED && background != SOLAR_SYSTEM) return;
+            if (background == null || !BackgroundImage.isExist(background)) return;
 
             BackgroundName = background;
 

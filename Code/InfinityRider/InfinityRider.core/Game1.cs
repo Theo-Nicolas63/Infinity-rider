@@ -57,7 +57,8 @@ namespace InfinityRider.core
             Utility.SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             FontSystem fontSystem = FontSystemFactory.Create(GraphicsDevice, 2048, 2048);
-            fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/Fonts/Allura-Regular.otf"));
+            fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/Fonts/SIXTY.TTF"));
+            //fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/Fonts/Allura-Regular.otf"));
 
             GuiHelper.Setup(this, fontSystem);
             _menu = new Menu();
@@ -75,16 +76,14 @@ namespace InfinityRider.core
             
             switch (Utility.GameStatus)
             {
-                case GameStatus.NOTSTART:
-                case GameStatus.PAUSED:
-                case GameStatus.FINISHED:
-                    UpdateMenu();
-                    break;
                 case GameStatus.PROCESSING:
                     foreach (var gameObject in GameObjects)
                     {
                         gameObject.Update(gameTime);
                     }
+                    break;
+                default:
+                    UpdateMenu();
                     break;
             }
 
@@ -98,6 +97,7 @@ namespace InfinityRider.core
             _menu.UpdateSetup();
             _menu.UpdateInput();
             _menu.Update();
+            _menu.updateCurrentMenu();
 
             GuiHelper.UpdateCleanup();
         }
@@ -111,16 +111,14 @@ namespace InfinityRider.core
 
             switch (Utility.GameStatus)
             {
-                case GameStatus.NOTSTART:
-                case GameStatus.PAUSED:
-                case GameStatus.FINISHED:
-                    _menu.DrawUI();
-                    break;
                 case GameStatus.PROCESSING:
                     foreach (var gameObject in GameObjects)
                     {
                         gameObject.Draw(gameTime);
                     }
+                    break;
+                default:
+                    _menu.DrawUI();
                     break;
             }
             
@@ -131,31 +129,32 @@ namespace InfinityRider.core
 
         public void LaunchGame()
         {
-            _menu.UpdateStateMenu();
             Utility.GameStatus = GameStatus.PROCESSING;
+            _menu.UpdateStateMenu();
         }
 
         private void pauseGame()
         {
             if (Utility.GameStatus == GameStatus.PROCESSING)
             {
-                _menu.UpdateStateMenu();
                 Utility.GameStatus = GameStatus.PAUSED;
+                _menu.UpdateStateMenu();
                 //_mainMenu.wasEscapeKeyDownBefore = true;
             }
         }
 
         public void EndGame()
         {
-            _menu.UpdateStateMenu();
             Utility.GameStatus = GameStatus.FINISHED;
+            _menu.UpdateStateMenu();
         }
 
         public void ReLaunchGame()
         {
+            LaunchGame();
             //TODO : Continue this method
-            _menu.UpdateStateMenu();
-            Utility.GameStatus = GameStatus.NOTSTART;
+            //_menu.UpdateStateMenu();
+            //Utility.GameStatus = GameStatus.NOTSTART;
         }
     }
 }
