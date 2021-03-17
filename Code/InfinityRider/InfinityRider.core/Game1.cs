@@ -97,7 +97,6 @@ namespace InfinityRider.core
             _menu.UpdateSetup();
             _menu.UpdateInput();
             _menu.Update();
-            _menu.updateCurrentMenu();
 
             GuiHelper.UpdateCleanup();
         }
