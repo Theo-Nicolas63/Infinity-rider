@@ -10,6 +10,7 @@ namespace InfinityRider.core.riderGame
 {
     class Menu
     {
+        private Panel panelBackground;
         enum MenuScreens
         {
             Main,
@@ -36,6 +37,7 @@ namespace InfinityRider.core.riderGame
             menuSwitch.Add(MenuScreens.Background, setupBackgroundsMenu());
             menuSwitch.Add(MenuScreens.Graphics, setupGraphicsMenu());
             menuSwitch.Add(MenuScreens.Quit, setupQuitConfirm());
+            
 
             mp.Add(menuSwitch);
 
@@ -108,6 +110,7 @@ namespace InfinityRider.core.riderGame
 
             p.Add(createTitle("Settings"));
             p.Add(Default.CreateButton("Background", c => {
+                setupBackgroundsMenu();
                 selectMenu(MenuScreens.Background);
             }, menuFocus.GrabFocus));
             p.Add(Default.CreateButton("Graphics", c => {
@@ -125,6 +128,7 @@ namespace InfinityRider.core.riderGame
             if (!BackgroundImage.isExist(background)) return;
             Component Component_background = Default.CreateButton(BackgroundImage.getHumanName(background), c =>
             {
+                c.IsFocused = true;
                 GuiHelper.NextLoopActions.Add(() => { Utility.Background.changeBackground(background); });
             }, menuFocus.GrabFocus);
             Component_background.IsFocused = Utility.Background.BackgroundName == background ? true : false;
@@ -133,27 +137,25 @@ namespace InfinityRider.core.riderGame
 
         private Component setupBackgroundsMenu()
         {
-            Panel p = new Panel();
-            p.Layout = new LayoutVerticalCenter();
-            p.AddHoverCondition(Default.ConditionMouseHover);
-            p.AddAction(Default.IsScrolled, Default.ScrollVertically);
+            panelBackground = new Panel();
+            panelBackground.Layout = new LayoutVerticalCenter();
+            panelBackground.AddHoverCondition(Default.ConditionMouseHover);
+            panelBackground.AddAction(Default.IsScrolled, Default.ScrollVertically);
 
-            p.Add(createTitle("Background Settings"));
+            panelBackground.Add(createTitle("Background Settings"));
 
-            p.Add(createTitle("Selected : " + BackgroundImage.getHumanName(Utility.Background.BackgroundName)));
+            addButtonBackgroundImage(panelBackground, BackgroundImage.BURNING_PLANET_RED);
+            addButtonBackgroundImage(panelBackground, BackgroundImage.EARTH_DOUBLE_LUNE);
+            addButtonBackgroundImage(panelBackground, BackgroundImage.EARTH_LUNE_BLUE);
+            addButtonBackgroundImage(panelBackground, BackgroundImage.PLANET_BLUE);
+            addButtonBackgroundImage(panelBackground, BackgroundImage.PLANET_RED);
+            addButtonBackgroundImage(panelBackground, BackgroundImage.SOLAR_SYSTEM);
 
-            addButtonBackgroundImage(p, BackgroundImage.BURNING_PLANET_RED);
-            addButtonBackgroundImage(p, BackgroundImage.EARTH_DOUBLE_LUNE);
-            addButtonBackgroundImage(p, BackgroundImage.EARTH_LUNE_BLUE);
-            addButtonBackgroundImage(p, BackgroundImage.PLANET_BLUE);
-            addButtonBackgroundImage(p, BackgroundImage.PLANET_RED);
-            addButtonBackgroundImage(p, BackgroundImage.SOLAR_SYSTEM);
-
-            p.Add(Default.CreateButton("Back", c => {
+            panelBackground.Add(Default.CreateButton("Back", c => {
                 selectOldMenu();
             }, menuFocus.GrabFocus));
 
-            return p;
+            return panelBackground;
         }
 
         private Component setupGraphicsMenu()
@@ -167,24 +169,6 @@ namespace InfinityRider.core.riderGame
             p.Add(createLabelDynamic(() => {
                 return "[Current font scale: " + GuiHelper.Scale + "x]";
             }));
-            p.Add(Default.CreateButton(() => {
-                return $"FullScreen: {(Utility.Settings.IsFullScreen ? " true" : "false")}";
-            }, c => {
-                GuiHelper.NextLoopActions.Add(() => { Utility.ToggleFullscreen(); });
-            }, menuFocus.GrabFocus));
-            p.Add(Default.CreateButton(() => {
-                return $"Borderless: {(Utility.Settings.IsBorderless ? " true" : "false")}";
-            }, c => {
-                GuiHelper.NextLoopActions.Add(() => {
-                    Utility.Settings.IsBorderless = !Utility.Settings.IsBorderless;
-                    //Toggle twice to handle the borderless change.
-                    Utility.ToggleFullscreen();
-                    if (!Utility.Settings.IsFullScreen)
-                    {
-                        Utility.ToggleFullscreen();
-                    }
-                });
-            }, menuFocus.GrabFocus));
             p.Add(Default.CreateButton("font Scale 1x", c => {
                 GuiHelper.NextLoopActions.Add(() => { GuiHelper.Scale = 1f; });
             }, menuFocus.GrabFocus));
