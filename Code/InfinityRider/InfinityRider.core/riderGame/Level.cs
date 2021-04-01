@@ -1,4 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using InfinityRider.core.riderGame.gameobjects;
+using InfinityRider.core.riderGame.gameobjects.background;
+using InfinityRider.core.riderGame.gameobjects.road;
+using InfinityRider.core.riderGame.menu;
+using InfinityRider.core.riderGame.utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -6,7 +11,7 @@ using System.Text;
 
 namespace InfinityRider.core.riderGame
 {
-    class Level : IDisposable
+    public class Level : IDisposable
     {
         private RoadConstructor currentRoad => Utility.RoadConstructor;
 

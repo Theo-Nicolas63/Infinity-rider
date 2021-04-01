@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using InfinityRider.core.riderGame.utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace InfinityRider.core.riderGame
+namespace InfinityRider.core.riderGame.gameobjects
 {
-    class Bike : GameObject
+    public class Bike : GameObject
     {
         private Texture2D _texture;
         public Vector2 Position { get; set; } = new Vector2(700, 200);

@@ -1,6 +1,9 @@
 ﻿using Apos.Gui;
 using FontStashSharp;
 using InfinityRider.core.riderGame;
+using InfinityRider.core.riderGame.gameobjects;
+using InfinityRider.core.riderGame.gameobjects.background;
+using InfinityRider.core.riderGame.utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InfinityRider.core.riderGame
+namespace InfinityRider.core.riderGame.utils
 {
     public class Settings
     {

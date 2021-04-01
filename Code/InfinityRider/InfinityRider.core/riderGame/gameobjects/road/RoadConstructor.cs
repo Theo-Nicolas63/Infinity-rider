@@ -1,11 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using InfinityRider.core.riderGame.utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace InfinityRider.core.riderGame
+namespace InfinityRider.core.riderGame.gameobjects.road
 {
-    class RoadConstructor : GameObject
+    public class RoadConstructor : GameObject
     {
         private int _screenWidth;
         private int _screenHeight;

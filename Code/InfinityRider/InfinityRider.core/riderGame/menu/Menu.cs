@@ -5,23 +5,18 @@ using MonoGame.Extended;
 using Optional;
 using System;
 using System.Collections.Generic;
-using static InfinityRider.core.riderGame.Background;
+using InfinityRider.core.riderGame.utils;
+using InfinityRider.core.riderGame.gameobjects.background;
 
-namespace InfinityRider.core.riderGame
+namespace InfinityRider.core.riderGame.menu
 {
-    class Menu
+    public class Menu
     {
         private Panel panelBackground;
-        enum MenuScreens
-        {
-            Main,
-            Pause,
-            Finish,
-            Settings,
-            Background,
-            Graphics,
-            Quit
-        }
+
+        ComponentFocus menuFocus;
+        Switcher<MenuScreens> menuSwitch;
+        LinkedList<MenuScreens> oldMenu = new LinkedList<MenuScreens>();
 
         public Menu()
         {
@@ -48,9 +43,129 @@ namespace InfinityRider.core.riderGame
 
             selectMenu(MenuScreens.Main);
         }
-        ComponentFocus menuFocus;
-        Switcher<MenuScreens> menuSwitch;
-        LinkedList<MenuScreens> oldMenu = new LinkedList<MenuScreens>();
+
+        public void UpdateStateMenu()
+        {
+            switch(Utility.GameStatus)
+            {
+                case GameStatus.NOTSTART:
+                    selectMenu(MenuScreens.Main);
+                    break;
+                case GameStatus.PROCESSING:
+                case GameStatus.PAUSED:
+                    selectMenu(MenuScreens.Pause);
+                    break;
+                case GameStatus.FINISHED:
+                    selectMenu(MenuScreens.Finish);
+                    break;
+            }
+        }
+
+        public void updateCurrentMenu()
+        {
+            selectMenuWithoutSaveOld(menuSwitch.Key.ValueOr(MenuScreens.Main));
+        }
+
+        private void selectMenu(MenuScreens key)
+        {
+            oldMenu.AddFirst(menuSwitch.Key.ValueOr(MenuScreens.Main));
+            selectMenuWithoutSaveOld(key);
+        }
+
+        private void selectMenuWithoutSaveOld(MenuScreens key)
+        {
+            GuiHelper.NextLoopActions.Add(() => {
+                menuSwitch.Key = Option.Some(key);
+                menuFocus.Focus = menuSwitch;
+            });
+        }
+
+        private void selectOldMenu()
+        {
+            var oldMenuLinked = oldMenu.First;
+            MenuScreens old = MenuScreens.Main;
+            if(oldMenuLinked != null)
+            {
+                old = oldMenuLinked.Value;
+                oldMenu.RemoveFirst();
+            }
+            selectMenuWithoutSaveOld(old);
+        }
+
+        public void UpdateSetup()
+        {
+            menuFocus.UpdateSetup();
+        }
+
+        public void UpdateInput()
+        {
+            if (Default.ConditionBackFocus())
+            {
+                if (menuSwitch.Key == Option.Some(MenuScreens.Main))
+                {
+                    selectMenu(MenuScreens.Quit);
+                }
+                else
+                {
+                    UpdateStateMenu();
+                }
+            }
+
+            menuFocus.UpdateInput();
+        }
+
+        public void UpdateMenu()
+        {
+            GuiHelper.UpdateSetup();
+
+            UpdateSetup();
+            UpdateInput();
+            Update();
+
+            GuiHelper.UpdateCleanup();
+        }
+
+        public void SetUpFont(int width, int height, string path)
+        {
+            FontSystem fontSystem = FontSystemFactory.Create(Utility.Game.GraphicsDevice, width, height);
+            fontSystem.AddFont(TitleContainer.OpenStream(path));
+            //fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/Fonts/Allura-Regular.otf"));
+
+            GuiHelper.Setup(Utility.Game, fontSystem);
+        }
+
+        public void SetUpFont()
+        {
+            SetUpFont(2048, 2048, $"{Utility.Game.Content.RootDirectory}/Fonts/SIXTY.TTF");
+        }
+
+        public void Update()
+        {
+            menuFocus.Update();
+        }
+
+        public void DrawUI()
+        {
+            menuFocus.Draw();
+        }
+
+        private Component createTitle(string text)
+        {
+            Label l = new Label(text);
+            Border border = new Border(l, 20, 20, 20, 50);
+
+            return border;
+        }
+
+        private Component createLabelDynamic(Func<string> text)
+        {
+            LabelDynamic ld = new LabelDynamic(text);
+            ld.ActiveColor = Color.White;
+            ld.NormalColor = new Color(150, 150, 150);
+            Border border = new Border(ld, 20, 20, 20, 20);
+
+            return border;
+        }
 
         private void setupButtonsNewGameSettingsQuit(Panel p)
         {
@@ -207,148 +322,6 @@ namespace InfinityRider.core.riderGame
             }, menuFocus.GrabFocus));
 
             return p;
-        }
-
-        public void UpdateStateMenu()
-        {
-            switch(Utility.GameStatus)
-            {
-                case GameStatus.NOTSTART:
-                    selectMenu(MenuScreens.Main);
-                    break;
-                case GameStatus.PROCESSING:
-                case GameStatus.PAUSED:
-                    selectMenu(MenuScreens.Pause);
-                    break;
-                case GameStatus.FINISHED:
-                    selectMenu(MenuScreens.Finish);
-                    break;
-            }
-        }
-
-        public void updateCurrentMenu()
-        {
-            selectMenuWithoutSaveOld(menuSwitch.Key.ValueOr(MenuScreens.Main));
-        }
-
-        private void selectMenu(MenuScreens key)
-        {
-            oldMenu.AddFirst(menuSwitch.Key.ValueOr(MenuScreens.Main));
-            selectMenuWithoutSaveOld(key);
-        }
-
-        private void selectMenuWithoutSaveOld(MenuScreens key)
-        {
-            GuiHelper.NextLoopActions.Add(() => {
-                menuSwitch.Key = Option.Some(key);
-                menuFocus.Focus = menuSwitch;
-            });
-        }
-
-        private void selectOldMenu()
-        {
-            var oldMenuLinked = oldMenu.First;
-            MenuScreens old = MenuScreens.Main;
-            if(oldMenuLinked != null)
-            {
-                old = oldMenuLinked.Value;
-                oldMenu.RemoveFirst();
-            }
-            selectMenuWithoutSaveOld(old);
-        }
-
-        public void UpdateSetup()
-        {
-            menuFocus.UpdateSetup();
-        }
-
-        public void UpdateInput()
-        {
-            if (Default.ConditionBackFocus())
-            {
-                if (menuSwitch.Key == Option.Some(MenuScreens.Main))
-                {
-                    selectMenu(MenuScreens.Quit);
-                }
-                else
-                {
-                    UpdateStateMenu();
-                }
-            }
-
-            menuFocus.UpdateInput();
-        }
-
-        public void UpdateMenu()
-        {
-            GuiHelper.UpdateSetup();
-
-            UpdateSetup();
-            UpdateInput();
-            Update();
-
-            GuiHelper.UpdateCleanup();
-        }
-
-        public void SetUpFont(int width, int height, string path)
-        {
-            FontSystem fontSystem = FontSystemFactory.Create(Utility.Game.GraphicsDevice, width, height);
-            fontSystem.AddFont(TitleContainer.OpenStream(path));
-            //fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/Fonts/Allura-Regular.otf"));
-
-            GuiHelper.Setup(Utility.Game, fontSystem);
-        }
-
-        public void SetUpFont()
-        {
-            SetUpFont(2048, 2048, $"{Utility.Game.Content.RootDirectory}/Fonts/SIXTY.TTF");
-        }
-
-        public void Update()
-        {
-            menuFocus.Update();
-        }
-
-        public void DrawUI()
-        {
-            menuFocus.Draw();
-        }
-
-        private Component createTitle(string text)
-        {
-            Label l = new Label(text);
-            Border border = new Border(l, 20, 20, 20, 50);
-
-            return border;
-        }
-
-        private Component createLabelDynamic(Func<string> text)
-        {
-            LabelDynamic ld = new LabelDynamic(text);
-            ld.ActiveColor = Color.White;
-            ld.NormalColor = new Color(150, 150, 150);
-            Border border = new Border(ld, 20, 20, 20, 20);
-
-            return border;
-        }
-
-        private class MenuPanel : ScreenPanel
-        {
-            public MenuPanel() { }
-
-            public override void Draw()
-            {
-                SetScissor();
-                _s.FillRectangle(BoundingRect, Color.Black * 0.6f);
-
-                _s.DrawLine(Left, Top, Right, Top, Color.Black, 2);
-                _s.DrawLine(Right, Top, Right, Bottom, Color.Black, 2);
-                _s.DrawLine(Left, Bottom, Right, Bottom, Color.Black, 2);
-                _s.DrawLine(Left, Top, Left, Bottom, Color.Black, 2);
-
-                base.Draw();
-                ResetScissor();
-            }
         }
     }
 }

@@ -1,9 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using InfinityRider.core.riderGame.gameobjects;
+using InfinityRider.core.riderGame.gameobjects.background;
+using InfinityRider.core.riderGame.gameobjects.road;
+using InfinityRider.core.riderGame.menu;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace InfinityRider.core.riderGame
+namespace InfinityRider.core.riderGame.utils
 {
-    static class Utility
+    public static class Utility
     {
         public static SpriteBatch SpriteBatch { get; set; }
         public static Settings Settings { get; set; }
