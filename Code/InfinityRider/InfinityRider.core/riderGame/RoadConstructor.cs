@@ -14,6 +14,7 @@ namespace InfinityRider.core.riderGame
         private Texture2D _foregroundTexture;
         private Random _randomizer = new Random();
         private readonly double[] randoms = new double[3];
+        Level _level;
         private float SpeedMove { get; set; } = 0;
         public Color MapColor { get; set; } = Color.Green;
         private RoadManager Road { get; set; }
@@ -23,6 +24,7 @@ namespace InfinityRider.core.riderGame
         {
             _game = game;
             _device = game.GraphicsDevice;
+            _level = level;
         }
 
         public override void Initialize()
@@ -105,6 +107,7 @@ namespace InfinityRider.core.riderGame
 
             if (keyBoardState.IsKeyDown(Keys.A))
             {
+                applyPhysics(gameTime);
                 SpeedMove = 500f;
             }
             else
@@ -134,6 +137,11 @@ namespace InfinityRider.core.riderGame
             }
 
             base.Draw(gameTime);
+        }
+
+        public void applyPhysics(GameTime gameTime)
+        {
+            _level.IsCollisionForward(gameTime);
         }
     }
 }

@@ -7,11 +7,11 @@ namespace InfinityRider.core.riderGame
     class Bike : GameObject
     {
         private Texture2D _texture;
-        private Vector2 Position { get; set; } = new Vector2(700, 200);
+        public Vector2 Position { get; set; } = new Vector2(700, 200);
         private float SpeedMove { get; set; }
-        private float Rotation { get; set; }
+        public float Rotation { get; set; }
         private float SpeedRotation { get; set; }
-   
+        public int GravityAcceleration=200;
         private Vector2 Velocity { get; set; }
 
         private Level _level;
@@ -19,7 +19,7 @@ namespace InfinityRider.core.riderGame
 
 
         public Rectangle BoundingRectangle =>
-            new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
+            new Rectangle((int)Position.X-(_texture.Width/2), (int)Position.Y-(_texture.Height/2), _texture.Width, _texture.Height);
         public Bike(Level level, Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
             SpeedMove = 500f;
@@ -67,7 +67,7 @@ namespace InfinityRider.core.riderGame
             if (keyBoardState.IsKeyDown(Keys.Down))
             {
                 Vector2 futurePosition = Vector2.Add(Position, new Vector2(0, SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds));
-                if (!(_level.IsCollision(futurePosition)))
+                if (!(_level.IsCollisionGravity(futurePosition)))
                     Position = futurePosition;
             }
             applyPhysics(gameTime);
@@ -84,15 +84,22 @@ namespace InfinityRider.core.riderGame
                 new Vector2(0.6f,0.6f),                                  // Echelle
                 SpriteEffects.None,                                      // Effet
                 0f);                                                     // Profondeur
-
                 base.Draw(gameTime);
         }
 
         public void applyPhysics(GameTime gameTime)
         {
-            Vector2 futurePosition = Vector2.Add(Position, new Vector2(0, 200f * (float)gameTime.ElapsedGameTime.TotalSeconds));
-            if (!(_level.IsCollision(futurePosition)))
+            Vector2 futurePosition = Vector2.Add(Position, new Vector2(0, GravityAcceleration * (float)gameTime.ElapsedGameTime.TotalSeconds));
+            if (!(_level.IsCollisionGravity(futurePosition)))
+            {
                 this.Position = futurePosition;
+                //GravityAcceleration = GravityAcceleration + 10;
+            }
+        }
+
+        public void rotation(float rotate)
+        {
+            Rotation = rotate;
         }
     }
 }
