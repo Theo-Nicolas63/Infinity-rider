@@ -1,4 +1,5 @@
 ﻿using Apos.Gui;
+using FontStashSharp;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Optional;
@@ -26,8 +27,10 @@ namespace InfinityRider.core.riderGame
         {
             menuFocus = new ComponentFocus(Default.ConditionPrevFocus, Default.ConditionNextFocus);
 
-            MenuPanel mp = new MenuPanel();
-            mp.Layout = new LayoutVerticalCenter();
+            SetUpFont();
+
+            MenuPanel menuPanel = new MenuPanel();
+            menuPanel.Layout = new LayoutVerticalCenter();
             menuSwitch = new Switcher<MenuScreens>();
 
             menuSwitch.Add(MenuScreens.Main, setupMainMenu());
@@ -37,11 +40,11 @@ namespace InfinityRider.core.riderGame
             menuSwitch.Add(MenuScreens.Background, setupBackgroundsMenu());
             menuSwitch.Add(MenuScreens.Graphics, setupGraphicsMenu());
             menuSwitch.Add(MenuScreens.Quit, setupQuitConfirm());
-            
 
-            mp.Add(menuSwitch);
 
-            menuFocus.Root = mp;
+            menuPanel.Add(menuSwitch);
+
+            menuFocus.Root = menuPanel;
 
             selectMenu(MenuScreens.Main);
         }
@@ -51,7 +54,7 @@ namespace InfinityRider.core.riderGame
 
         private void setupButtonsNewGameSettingsQuit(Panel p)
         {
-            p.Add(Default.CreateButton("New Game", c => { Utility.Game.ReLaunchGame(); }, menuFocus.GrabFocus));
+            p.Add(Default.CreateButton("New Game", c => { Utility.Level.ReLaunchGame(); }, menuFocus.GrabFocus));
             p.Add(Default.CreateButton("Settings", c => { selectMenu(MenuScreens.Settings); }, menuFocus.GrabFocus));
             p.Add(Default.CreateButton("Quit", c => { selectMenu(MenuScreens.Quit); }, menuFocus.GrabFocus));
         }
@@ -80,7 +83,7 @@ namespace InfinityRider.core.riderGame
             p.Add(createTitle("Infinity Rider"));
             p.Add(createTitle("Game paused"));
 
-            p.Add(Default.CreateButton("Resume Game", c => { Utility.Game.LaunchGame(); }, menuFocus.GrabFocus));
+            p.Add(Default.CreateButton("Resume Game", c => { Utility.Level.LaunchGame(); }, menuFocus.GrabFocus));
             setupButtonsNewGameSettingsQuit(p);
 
             return p;
@@ -274,6 +277,31 @@ namespace InfinityRider.core.riderGame
             }
 
             menuFocus.UpdateInput();
+        }
+
+        public void UpdateMenu()
+        {
+            GuiHelper.UpdateSetup();
+
+            UpdateSetup();
+            UpdateInput();
+            Update();
+
+            GuiHelper.UpdateCleanup();
+        }
+
+        public void SetUpFont(int width, int height, string path)
+        {
+            FontSystem fontSystem = FontSystemFactory.Create(Utility.Game.GraphicsDevice, width, height);
+            fontSystem.AddFont(TitleContainer.OpenStream(path));
+            //fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/Fonts/Allura-Regular.otf"));
+
+            GuiHelper.Setup(Utility.Game, fontSystem);
+        }
+
+        public void SetUpFont()
+        {
+            SetUpFont(2048, 2048, $"{Utility.Game.Content.RootDirectory}/Fonts/SIXTY.TTF");
         }
 
         public void Update()

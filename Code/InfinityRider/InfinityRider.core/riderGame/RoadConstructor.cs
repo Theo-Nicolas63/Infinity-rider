@@ -16,9 +16,12 @@ namespace InfinityRider.core.riderGame
         public Color MapColor { get; set; } = Color.Green;
         private RoadManager Road { get; set; }
         private int[] _terrainContour;
+        private Level _level => Utility.Level;
 
-        public RoadConstructor(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
+        public RoadConstructor(Game game) : base(game)
         {
+            _game = game;
+            _device = game.GraphicsDevice;
         }
 
         public override void Initialize()
@@ -66,6 +69,11 @@ namespace InfinityRider.core.riderGame
             _foregroundTexture.SetData(foreGroundColors);
         }
 
+        public int getTerrainContour(int index)
+        {
+            return this._terrainContour[index];
+        }
+
         private void loadRandoms()
         {
             randoms[0] = _randomizer.NextDouble() + 1;
@@ -97,6 +105,7 @@ namespace InfinityRider.core.riderGame
 
             if (keyBoardState.IsKeyDown(Keys.A))
             {
+                applyPhysics(gameTime);
                 SpeedMove = 500f;
             }
             else
@@ -118,14 +127,19 @@ namespace InfinityRider.core.riderGame
 
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
-
             Rectangle screenRectangle = new Rectangle(0, 0, _screenWidth, _screenHeight);
 
             if (_foregroundTexture != null)
             {
                 _spriteBatch.Draw(_foregroundTexture, screenRectangle, Color.White);
             }
+
+            base.Draw(gameTime);
+        }
+
+        public void applyPhysics(GameTime gameTime)
+        {
+            _level.IsCollisionForward(gameTime);
         }
     }
 }

@@ -60,7 +60,7 @@ namespace InfinityRider.core.riderGame
         private Texture2D _imageBackground;
 
 
-        public Background(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch, string backgroundName = BackgroundImage.BURNING_PLANET_RED) : base(game, spriteBatch)
+        public Background(Microsoft.Xna.Framework.Game game, string backgroundName = BackgroundImage.BURNING_PLANET_RED) : base(game)
         {
             BackgroundName = backgroundName;
         }

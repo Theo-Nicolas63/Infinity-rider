@@ -7,15 +7,25 @@ namespace InfinityRider.core.riderGame
     class Bike : GameObject
     {
         private Texture2D _texture;
-        private Vector2 Position { get; set; }
+        public Vector2 Position { get; set; } = new Vector2(700, 200);
         private float SpeedMove { get; set; }
-        private float Rotation { get; set; }
+        public float Rotation { get; set; }
         private float SpeedRotation { get; set; }
-        public Bike(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
+        public int GravityAcceleration=200;
+        private Vector2 Velocity { get; set; }
+
+        private Level _level => Utility.Level;
+
+
+
+        public Rectangle BoundingRectangle =>
+            new Rectangle((int)Position.X-(_texture.Width/2), (int)Position.Y-(_texture.Height/2), _texture.Width, _texture.Height);
+        public Bike(Game game) : base(game)
         {
             SpeedMove = 500f;
             Rotation = 0f;
             SpeedRotation = 9f;
+            LoadContent();
         }
 
         public override void Initialize()
@@ -25,14 +35,11 @@ namespace InfinityRider.core.riderGame
 
         protected override void LoadContent()
         {
-            base.LoadContent();
             _texture = Game.Content.Load<Texture2D>("bikes/Bike 1");
         }
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
-
             var keyBoardState = Keyboard.GetState();
 
             if(keyBoardState.IsKeyDown(Keys.Space))
@@ -42,22 +49,27 @@ namespace InfinityRider.core.riderGame
             }
 
             //This is to test the keyboard and the bike, but in the game it will not be in the code
-            if(keyBoardState.IsKeyDown(Keys.Left))
-            {
-                Position = Vector2.Add(Position, new Vector2(SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds, 0));
-            }
-            if (keyBoardState.IsKeyDown(Keys.Right))
-            {
-                Position = Vector2.Add(Position, new Vector2(SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds, 0));
-            }
+            //if(keyBoardState.IsKeyDown(Keys.Left))
+            //{
+            //    Position = Vector2.Add(Position, new Vector2(SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds, 0));
+            //}
+            //if (keyBoardState.IsKeyDown(Keys.Right))
+            //{
+            //    Position = Vector2.Add(Position, new Vector2(SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds, 0));
+            //}
             if (keyBoardState.IsKeyDown(Keys.Up))
             {
-                Position = Vector2.Add(Position, new Vector2(0, SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds));
+                //Vector2 futurePosition = Vector2.Add(Position, new Vector2(0, SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds));
+                //if (!_level.IsCollision(futurePosition))
+                    Position = Vector2.Add(Position, new Vector2(0, SpeedMove * -1 * (float)gameTime.ElapsedGameTime.TotalSeconds));
             }
             if (keyBoardState.IsKeyDown(Keys.Down))
             {
-                Position = Vector2.Add(Position, new Vector2(0, SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds));
+                Vector2 futurePosition = Vector2.Add(Position, new Vector2(0, SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds));
+                if (!(_level.IsCollisionGravity(futurePosition)))
+                    Position = futurePosition;
             }
+            applyPhysics(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
@@ -71,8 +83,22 @@ namespace InfinityRider.core.riderGame
                 new Vector2(0.6f,0.6f),                                  // Echelle
                 SpriteEffects.None,                                      // Effet
                 0f);                                                     // Profondeur
+                base.Draw(gameTime);
+        }
 
-            base.Draw(gameTime);
+        public void applyPhysics(GameTime gameTime)
+        {
+            Vector2 futurePosition = Vector2.Add(Position, new Vector2(0, GravityAcceleration * (float)gameTime.ElapsedGameTime.TotalSeconds));
+            if (!(_level.IsCollisionGravity(futurePosition)))
+            {
+                this.Position = futurePosition;
+                //GravityAcceleration = GravityAcceleration + 10;
+            }
+        }
+
+        public void rotation(float rotate)
+        {
+            Rotation = rotate;
         }
     }
 }
