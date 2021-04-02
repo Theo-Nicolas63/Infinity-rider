@@ -7,8 +7,6 @@ namespace InfinityRider.core.riderGame
 {
     class RoadConstructor : GameObject
     {
-        private Game _game;
-        private GraphicsDevice _device;
         private int _screenWidth;
         private int _screenHeight;
         private Texture2D _foregroundTexture;
@@ -18,6 +16,7 @@ namespace InfinityRider.core.riderGame
         private float SpeedMove { get; set; } = 0;
         public Color MapColor { get; set; } = Color.Green;
         private RoadManager Road { get; set; }
+        private int[] _terrainContour;
         private int[] TerrainContour;
 
         public RoadConstructor(Level level, Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
@@ -25,6 +24,9 @@ namespace InfinityRider.core.riderGame
             _game = game;
             _device = game.GraphicsDevice;
             _level = level;
+        }
+        public RoadConstructor(Microsoft.Xna.Framework.Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
+        {
         }
 
         public override void Initialize()
@@ -89,7 +91,7 @@ namespace InfinityRider.core.riderGame
 
             loadRandoms();
 
-            if (_game != null)
+            if (_device != null)
             {
                 _screenWidth = _device.Viewport.Width;
                 _screenHeight = _device.Viewport.Height;
