@@ -15,9 +15,13 @@ namespace InfinityRider.core
         private Level level;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+<<<<<<< HEAD
         public GraphicsDevice _device { get; private set; }
+=======
+        private IList<GameObject> GameObjects { get; set; } = new List<GameObject>();
         private MainMenu _mainMenu;
         public GameStatus Status { get; private set; } = GameStatus.NOTSTART;
+>>>>>>> Menu
 
         public Game1()
         {
@@ -31,9 +35,21 @@ namespace InfinityRider.core
             // TODO: Add your initialization logic here
 
             base.Initialize();
+<<<<<<< HEAD
             _device = this.GraphicsDevice;
             this.level = new Level(this, _spriteBatch, _device);
+=======
+
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Background background = new Background(this, _spriteBatch);
+            GameObjects.Add(background);
+            RoadConstructor road = new RoadConstructor(this, _spriteBatch);
+            GameObjects.Add(road);
+            Bike bike = new Bike(this, _spriteBatch);
+            GameObjects.Add(bike);
             _mainMenu = new MainMenu(this, _spriteBatch);
+>>>>>>> Menu
         }
 
         protected override void LoadContent()
@@ -49,7 +65,9 @@ namespace InfinityRider.core
                 pauseGame();
 
             // TODO: Add your update logic here
+<<<<<<< HEAD
             level.Update(gameTime);
+=======
 
             switch (Status)
             {
@@ -57,10 +75,10 @@ namespace InfinityRider.core
                     _mainMenu.Update(gameTime);
                     break;
                 case GameStatus.PROCESSING:
-                    //foreach (var gameObject in GameObjects)
-                    //{
-                    //    gameObject.Update(gameTime);
-                    //}
+                    foreach (var gameObject in GameObjects)
+                    {
+                        gameObject.Update(gameTime);
+                    }
                     break;
                 case GameStatus.PAUSED:
                     _mainMenu.Update(gameTime);
@@ -70,6 +88,7 @@ namespace InfinityRider.core
                     break;
             }
 
+>>>>>>> Menu
             base.Update(gameTime);
         }
 
@@ -87,7 +106,9 @@ namespace InfinityRider.core
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             // TODO: Add your drawing code here
+<<<<<<< HEAD
             level.Draw(gameTime, _spriteBatch);
+=======
 
             switch (Status)
             {
@@ -98,14 +119,15 @@ namespace InfinityRider.core
                     break;
                 case GameStatus.PROCESSING:
                     _spriteBatch.Begin();
-                    //foreach (var gameObject in GameObjects)
-                    //{
-                    //    gameObject.Draw(gameTime);
-                    //}
+                    foreach (var gameObject in GameObjects)
+                    {
+                        gameObject.Draw(gameTime);
+                    }
                     _spriteBatch.End();
                     break;
             }
 
+>>>>>>> Menu
             base.Draw(gameTime);
         }
 

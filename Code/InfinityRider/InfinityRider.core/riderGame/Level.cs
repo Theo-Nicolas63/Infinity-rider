@@ -57,8 +57,9 @@ namespace InfinityRider.core.riderGame
                     currentBike.GravityAcceleration = -10;
                 
                 currentBike.Position = Vector2.Add(currentBike.Position, new Vector2(0, currentBike.GravityAcceleration * (float)gameTime.ElapsedGameTime.TotalSeconds));
-            }            
-            currentBike.GravityAcceleration = currentBike.GravityAcceleration+20;
+            }
+            if(currentBike.GravityAcceleration < 500)
+                currentBike.GravityAcceleration = currentBike.GravityAcceleration+20;
         }
 
 
