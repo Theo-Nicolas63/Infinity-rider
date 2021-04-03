@@ -15,7 +15,7 @@ namespace InfinityRider.core.riderGame.gameobjects
         public int GravityAcceleration=200;
         private Vector2 Velocity { get; set; }
 
-        private Level _level => Utility.Level;
+        private Level _level;
 
 
 
@@ -23,6 +23,7 @@ namespace InfinityRider.core.riderGame.gameobjects
             new Rectangle((int)Position.X-(_texture.Width/2), (int)Position.Y-(_texture.Height/2), _texture.Width, _texture.Height);
         public Bike(Game game) : base(game)
         {
+            _level = Utility.Level;
             SpeedMove = 500f;
             Rotation = 0f;
             SpeedRotation = 9f;

@@ -15,7 +15,7 @@ namespace InfinityRider.core
     public class Game1 : Game
     {
 
-        private Level level => Utility.Level;
+        private Level level;
         private GraphicsDeviceManager _graphics;
         private IList<GameObject> GameObjects { get; set; } = new List<GameObject>();
         public Background GameBackground { get; private set; }
@@ -46,6 +46,8 @@ namespace InfinityRider.core
             Utility.SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             Utility.Level = new Level(this, _device);
+
+            level = Utility.Level;
 
             _device = this.GraphicsDevice;
             base.Initialize();

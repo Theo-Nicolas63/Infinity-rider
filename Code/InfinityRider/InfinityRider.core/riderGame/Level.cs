@@ -13,9 +13,9 @@ namespace InfinityRider.core.riderGame
 {
     public class Level : IDisposable
     {
-        private RoadConstructor currentRoad => Utility.RoadConstructor;
+        private RoadConstructor currentRoad;
 
-        private Bike currentBike => Utility.Bike;
+        private Bike currentBike;
         private IList<GameObject> GameObjects { get; set; } = new List<GameObject>();
 
         public GraphicsDevice _device;
@@ -26,8 +26,9 @@ namespace InfinityRider.core.riderGame
 
         private Rectangle rect;
 
-        private Menu _menu => Utility.Menu;
+        private Menu _menu;
 
+        private SpriteBatch _spriteBatch;
 
         public Level(Game game, GraphicsDevice device)
         {
@@ -35,11 +36,16 @@ namespace InfinityRider.core.riderGame
             Utility.Background = new Background(game);
             GameObjects.Add(Utility.Background);
             Utility.RoadConstructor = new RoadConstructor(game);
+            currentRoad = Utility.RoadConstructor;
             GameObjects.Add(currentRoad);
             Utility.Bike = new Bike(game);
+            currentBike = Utility.Bike;
             GameObjects.Add(currentBike);
 
             Utility.Menu = new Menu();
+            _menu = Utility.Menu;
+
+            _spriteBatch = Utility.SpriteBatch;
 
             //currentTerrain = currentRoad.getTerrainContour();
             _device = device;
@@ -110,7 +116,7 @@ namespace InfinityRider.core.riderGame
         public void Draw(GameTime gameTime)
         {
             // TODO: Add your drawing code here
-            Utility.SpriteBatch.Begin();
+            _spriteBatch.Begin();
             switch (Utility.GameStatus)
             {
                 case GameStatus.PROCESSING:
@@ -124,7 +130,7 @@ namespace InfinityRider.core.riderGame
                     break;
             }
             //DrawRectangle(rect, Color.White, spriteBatch);
-            Utility.SpriteBatch.End();
+            _spriteBatch.End();
         }
 
         public void Dispose()

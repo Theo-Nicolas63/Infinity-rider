@@ -6,7 +6,7 @@ namespace InfinityRider.core.riderGame.gameobjects
 {
     public class GameObject : DrawableGameComponent
     {
-        protected SpriteBatch _spriteBatch => Utility.SpriteBatch;
+        protected SpriteBatch _spriteBatch;
         protected Game _game;
         protected GraphicsDevice _device;
 
@@ -15,6 +15,7 @@ namespace InfinityRider.core.riderGame.gameobjects
             _game = game;
             _device = game.GraphicsDevice;
             LoadContent();
+            _spriteBatch = Utility.SpriteBatch;
         }
 
         public virtual void Draw(GameTime gameTime)

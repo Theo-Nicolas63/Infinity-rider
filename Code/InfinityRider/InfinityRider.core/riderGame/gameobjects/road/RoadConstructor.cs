@@ -17,10 +17,11 @@ namespace InfinityRider.core.riderGame.gameobjects.road
         public Color MapColor { get; set; } = Color.Green;
         private RoadManager Road { get; set; }
         private int[] _terrainContour;
-        private Level _level => Utility.Level;
+        private Level _level;
 
         public RoadConstructor(Game game) : base(game)
         {
+            _level = Utility.Level;
             _game = game;
             _device = game.GraphicsDevice;
         }
