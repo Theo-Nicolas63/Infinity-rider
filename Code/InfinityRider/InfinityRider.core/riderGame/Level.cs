@@ -34,9 +34,10 @@ namespace InfinityRider.core.RiderGame
 
         private SpriteFont _font;
 
-        private int MaxJump = 0;
+        public int MaxJump { get; private set;} = 0;
 
-
+        private float Timer;
+        private int TimeCompteur = 40;
 
         public Level(Game game, SpriteBatch spriteBatch, GraphicsDevice device, SpriteFont font)
         {
@@ -107,9 +108,22 @@ namespace InfinityRider.core.RiderGame
                     gameObject.Update(gameTime);
                 }
             }
-        }
+            if(game.Status == GameStatus.PROCESSING)
+            { 
+                Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                TimeCompteur -= (int)Timer;
+                if (Timer >= 1.0F) Timer = 0F;
+            }
 
-        public void DrawRectangle(Rectangle coords, Color color, SpriteBatch spriteBatch)
+            if(TimeCompteur == 0)
+            {
+                EndGame();
+            }
+
+           
+        }
+    
+         public void DrawRectangle(Rectangle coords, Color color, SpriteBatch spriteBatch)
         {
             if (testCollision == null)
             {
@@ -135,7 +149,8 @@ namespace InfinityRider.core.RiderGame
                     gameObject.Draw(gameTime, spriteBatch);
                 }
                 spriteBatch.DrawString(_font, "Score : " + Score, new Vector2(100, 100), Color.White);
-                spriteBatch.DrawString(_font, "Meilleur saut :" + MaxJump, new Vector2(100, 120), Color.White);
+                spriteBatch.DrawString(_font, "Meilleur saut :" + MaxJump, new Vector2(100, 135), Color.White);
+                spriteBatch.DrawString(_font, "Temps : " + TimeCompteur, new Vector2(_device.Viewport.Bounds.Width/2, 120), Color.White);
             }
 
             
