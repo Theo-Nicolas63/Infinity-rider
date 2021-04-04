@@ -85,7 +85,7 @@ namespace InfinityRider.core.RiderGame.GameObjects.Road
             if (keyBoardState.IsKeyDown(Keys.A))
             {
                 applyPhysics(gameTime);
-                if (SpeedMove < 450f)
+                if (SpeedMove < 600f)
                     SpeedMove += 5;
             }
             else

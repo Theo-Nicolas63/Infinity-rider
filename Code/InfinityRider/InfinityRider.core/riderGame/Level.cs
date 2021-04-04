@@ -12,32 +12,63 @@ namespace InfinityRider.core.RiderGame
 {
     public class Level : IDisposable
     {
+        /// <summary>
+        /// road of the game
+        /// </summary>
         private RoadConstructor currentRoad;
 
+        /// <summary>
+        /// instance of the bike
+        /// </summary>
         private Bike currentBike;
-
+        /// <summary>
+        /// Background of the game
+        /// </summary>
         public Background Background { get; private set; }
-
+        /// <summary>
+        /// list of gameObjects
+        /// </summary>
         private IList<GameObject> GameObjects { get; set; } = new List<GameObject>();
 
+        /// <summary>
+        /// to get the size of the screen
+        /// </summary>
         public GraphicsDevice _device;
 
         private Texture2D testCollision;
 
         private Rectangle rect;
 
+        /// <summary>
+        /// current game
+        /// </summary>
         private Game1 game;
 
+        /// <summary>
+        /// Menu of the game
+        /// </summary>
         private MenuGame menu;
 
+        /// <summary>
+        /// score of the game
+        /// </summary>
         private int Score = 0;
 
+        /// <summary>
+        /// font
+        /// </summary>
         private SpriteFont _font;
 
+        /// <summary>
+        /// biggest jump of the current game
+        /// </summary>
         public int MaxJump { get; private set;} = 0;
 
+        /// <summary>
+        /// timer of the game (30 sec)
+        /// </summary>
         private float Timer;
-        private int TimeCompteur = 40;
+        private int TimeCompteur = 30;
 
         public Level(Game game, SpriteBatch spriteBatch, GraphicsDevice device, SpriteFont font)
         {
@@ -55,6 +86,11 @@ namespace InfinityRider.core.RiderGame
             menu = new MenuGame(game, this);
         }
 
+        /// <summary>
+        /// allows to verify collsions when the bike falls 
+        /// </summary>
+        /// <param name="futurPosition"> future position of the bike if there is no collision</param>
+        /// <returns>return true if there is collision and false if there is one</returns>
         public bool IsCollisionGravity(Vector2 futurPosition)
         {
             Rectangle terrain = new Rectangle((int)futurPosition.X, currentRoad.getTerrainContour((int)futurPosition.X), 10, 20);
@@ -74,6 +110,10 @@ namespace InfinityRider.core.RiderGame
                 
         }
 
+        /// <summary>
+        /// allows to verifiy if the road mounts and allows the bike to go up
+        /// </summary>
+        /// <param name="gameTime">recipes the gameTime of the game</param>
         public void IsCollisionForward(GameTime gameTime)
         {
             Rectangle terrain = new Rectangle((int)currentBike.Position.X, currentRoad.getTerrainContour((int)currentBike.Position.X), 10, 20);
@@ -94,7 +134,10 @@ namespace InfinityRider.core.RiderGame
         }
 
 
-
+        /// <summary>
+        /// update of the game which allows to manage actions of the game
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
@@ -122,7 +165,9 @@ namespace InfinityRider.core.RiderGame
 
            
         }
-    
+        /// <summary>
+        ///  draw of a rectangle, used for testing collisions
+        /// </summary>
          public void DrawRectangle(Rectangle coords, Color color, SpriteBatch spriteBatch)
         {
             if (testCollision == null)
@@ -133,6 +178,11 @@ namespace InfinityRider.core.RiderGame
             spriteBatch.Draw(testCollision, coords, color);
         }
 
+        /// <summary>
+        /// allows to display elements of the game
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // TODO: Add your drawing code here
@@ -149,8 +199,8 @@ namespace InfinityRider.core.RiderGame
                     gameObject.Draw(gameTime, spriteBatch);
                 }
                 spriteBatch.DrawString(_font, "Score : " + Score, new Vector2(100, 100), Color.White);
-                spriteBatch.DrawString(_font, "Meilleur saut :" + MaxJump, new Vector2(100, 135), Color.White);
-                spriteBatch.DrawString(_font, "Temps : " + TimeCompteur, new Vector2(_device.Viewport.Bounds.Width/2, 120), Color.White);
+                spriteBatch.DrawString(_font, "Biggest jump :" + MaxJump, new Vector2(100, 135), Color.White);
+                spriteBatch.DrawString(_font, "Time : " + TimeCompteur, new Vector2(_device.Viewport.Bounds.Width/2, 120), Color.White);
             }
 
             
@@ -163,13 +213,17 @@ namespace InfinityRider.core.RiderGame
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        ///allows to launch a game
+        /// </summary>
         public void LaunchGame()
         {
             game.Status = GameStatus.PROCESSING;
             menu.UpdateStateMenu();
         }
-
+        /// <summary>
+        /// allows to paude a game (not used)
+        /// </summary>
         public void PauseGame()
         {
             if (game.Status == GameStatus.PROCESSING)
@@ -178,14 +232,18 @@ namespace InfinityRider.core.RiderGame
                 menu.UpdateStateMenu();
             }
         }
-
+        /// <summary>
+        /// allows to end the game and to call the end game menu
+        /// </summary>
         public void EndGame()
         {
             currentRoad.ReinitializeRoad();
             game.Status = GameStatus.FINISHED;
             menu.UpdateStateMenu();
         }
-
+        /// <summary>
+        /// allows to launch a new game and to reinitialize elements
+        /// </summary>
         public void ReLaunchGame()
         {
             currentRoad.ReinitializeRoad();
