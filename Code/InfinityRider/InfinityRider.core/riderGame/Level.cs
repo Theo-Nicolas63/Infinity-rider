@@ -30,7 +30,16 @@ namespace InfinityRider.core.RiderGame
 
         private MenuGame menu;
 
-        public Level(Game game, SpriteBatch spriteBatch, GraphicsDevice device)
+        private int Score = 0;
+
+        private SpriteFont _font;
+
+        public int MaxJump { get; private set;} = 0;
+
+        private float Timer;
+        private int TimeCompteur = 40;
+
+        public Level(Game game, SpriteBatch spriteBatch, GraphicsDevice device, SpriteFont font)
         {
             this.game = (Game1) game;
 
@@ -42,7 +51,7 @@ namespace InfinityRider.core.RiderGame
             GameObjects.Add(currentBike);
             //currentTerrain = currentRoad.getTerrainContour();
             _device = device;
-
+            _font = font;
             menu = new MenuGame(game, this);
         }
 
@@ -52,10 +61,17 @@ namespace InfinityRider.core.RiderGame
             rect = terrain;
             if (currentBike.BoundingRectangle.Intersects(terrain))
             {
-                //currentBike.rotation(0);
+                if (MaxJump < Score)
+                    MaxJump = Score;
+                Score = 0;
                 return true;
             }
-            else return false;
+            else
+            {
+                Score++;
+                return false;
+            }
+                
         }
 
         public void IsCollisionForward(GameTime gameTime)
@@ -64,10 +80,12 @@ namespace InfinityRider.core.RiderGame
             rect = terrain;
             while (currentBike.BoundingRectangle.Intersects(terrain))
             {
-                if (currentRoad.getTerrainContour((int)currentBike.Position.X + 10) < currentRoad.getTerrainContour((int)currentBike.Position.X))
-                    currentBike.GravityAcceleration = currentBike.GravityAcceleration - 50;
-                else 
-                    currentBike.GravityAcceleration = -10;
+                if (currentRoad.getTerrainContour((int)currentBike.Position.X + 10) < currentRoad.getTerrainContour((int)currentBike.Position.X) - 5)
+                {
+                    if(currentBike.GravityAcceleration > -1000)
+                    currentBike.GravityAcceleration -= 50;
+                }
+                 else currentBike.GravityAcceleration = -10;
                 
                 currentBike.Position = Vector2.Add(currentBike.Position, new Vector2(0, currentBike.GravityAcceleration * (float)gameTime.ElapsedGameTime.TotalSeconds));
             }
@@ -90,9 +108,22 @@ namespace InfinityRider.core.RiderGame
                     gameObject.Update(gameTime);
                 }
             }
-        }
+            if(game.Status == GameStatus.PROCESSING)
+            { 
+                Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                TimeCompteur -= (int)Timer;
+                if (Timer >= 1.0F) Timer = 0F;
+            }
 
-        public void DrawRectangle(Rectangle coords, Color color, SpriteBatch spriteBatch)
+            if(TimeCompteur == 0)
+            {
+                EndGame();
+            }
+
+           
+        }
+    
+         public void DrawRectangle(Rectangle coords, Color color, SpriteBatch spriteBatch)
         {
             if (testCollision == null)
             {
@@ -117,12 +148,17 @@ namespace InfinityRider.core.RiderGame
                 {
                     gameObject.Draw(gameTime, spriteBatch);
                 }
+                spriteBatch.DrawString(_font, "Score : " + Score, new Vector2(100, 100), Color.White);
+                spriteBatch.DrawString(_font, "Meilleur saut :" + MaxJump, new Vector2(100, 135), Color.White);
+                spriteBatch.DrawString(_font, "Temps : " + TimeCompteur, new Vector2(_device.Viewport.Bounds.Width/2, 120), Color.White);
             }
 
+            
             //DrawRectangle(rect, Color.White, spriteBatch);
             spriteBatch.End();
         }
 
+        
         public void Dispose()
         {
             throw new NotImplementedException();
@@ -156,5 +192,7 @@ namespace InfinityRider.core.RiderGame
             currentBike.Position = new Vector2(currentBike.Position.X, 5);
             LaunchGame();
         }
+
+
     }
 }

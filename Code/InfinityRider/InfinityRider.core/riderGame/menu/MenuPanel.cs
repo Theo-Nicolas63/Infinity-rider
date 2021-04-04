@@ -4,10 +4,19 @@ using MonoGame.Extended;
 
 namespace InfinityRider.core.RiderGame.Menu
 {
+    /// <summary>
+    /// A class of MenuPanel that inherit of ScreenPanel, and that can be drawn
+    /// </summary>
     class MenuPanel : ScreenPanel
     {
+        /// <summary>
+        /// A constructor of the class MenuPanel
+        /// </summary>
         public MenuPanel() { }
 
+        /// <summary>
+        /// A method to draw the MenuPanel
+        /// </summary>
         public override void Draw()
         {
             SetScissor();
