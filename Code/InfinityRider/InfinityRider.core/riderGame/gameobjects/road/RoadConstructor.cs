@@ -24,7 +24,7 @@ namespace InfinityRider.core.RiderGame.GameObjects.Road
         /// <summary>
         /// The level that have created this instance of class
         /// </summary>
-        Level _level;
+        private Level _level;
         /// <summary>
         /// The speed of the road that are displaied, to move it
         /// </summary>

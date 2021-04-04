@@ -17,15 +17,15 @@ namespace InfinityRider.core.RiderGame.Menu
         /// <summary>
         /// The instance of ComponentFocus of the Menu
         /// </summary>
-        readonly ComponentFocus menuFocus;
+        private readonly ComponentFocus menuFocus;
         /// <summary>
         /// The instance of Switcher of the Menu to navigate from a Menu to another
         /// </summary>
-        readonly Switcher<MenuScreens> menuSwitch;
+        private readonly Switcher<MenuScreens> menuSwitch;
         /// <summary>
         /// A list of the old Menu by which we've been through, allowing us to go back
         /// </summary>
-        readonly LinkedList<MenuScreens> oldMenu = new LinkedList<MenuScreens>();
+        private readonly LinkedList<MenuScreens> oldMenu = new LinkedList<MenuScreens>();
         /// <summary>
         /// The Game instance that contains all the game
         /// </summary>
