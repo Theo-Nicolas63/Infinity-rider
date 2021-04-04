@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace InfinityRider.core.riderGame.utils
+﻿namespace InfinityRider.core.RiderGame.Utils
 {
     public enum GameStatus
     {

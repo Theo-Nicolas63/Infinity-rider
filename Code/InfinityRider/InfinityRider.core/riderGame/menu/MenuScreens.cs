@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace InfinityRider.core.riderGame.menu
+﻿namespace InfinityRider.core.RiderGame.Menu
 {
     enum MenuScreens
     {

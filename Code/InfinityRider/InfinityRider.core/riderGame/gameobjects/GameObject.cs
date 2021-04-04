@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace InfinityRider.core.riderGame.gameobjects
+namespace InfinityRider.core.RiderGame.GameObjects
 {
     public class GameObject : DrawableGameComponent
     {

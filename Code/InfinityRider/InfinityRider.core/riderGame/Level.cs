@@ -2,14 +2,13 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using InfinityRider.core.riderGame.gameobjects.background;
-using InfinityRider.core.riderGame.menu;
-using InfinityRider.core.riderGame.gameobjects.road;
-using InfinityRider.core.riderGame.gameobjects;
-using InfinityRider.core.riderGame.utils;
+using InfinityRider.core.RiderGame.GameObjects.Background;
+using InfinityRider.core.RiderGame.GameObjects.Road;
+using InfinityRider.core.RiderGame.GameObjects;
+using InfinityRider.core.RiderGame.Menu;
+using InfinityRider.core.RiderGame.Utils;
 
-namespace InfinityRider.core.riderGame
+namespace InfinityRider.core.RiderGame
 {
     public class Level : IDisposable
     {
@@ -23,15 +22,13 @@ namespace InfinityRider.core.riderGame
 
         public GraphicsDevice _device;
 
-        private int[] currentTerrain;
-
         private Texture2D testCollision;
 
         private Rectangle rect;
 
         private Game1 game;
 
-        private Menu menu;
+        private MenuGame menu;
 
         public Level(Game game, SpriteBatch spriteBatch, GraphicsDevice device)
         {
@@ -46,7 +43,7 @@ namespace InfinityRider.core.riderGame
             //currentTerrain = currentRoad.getTerrainContour();
             _device = device;
 
-            menu = new Menu(game, this);
+            menu = new MenuGame(game, this);
         }
 
         public bool IsCollisionGravity(Vector2 futurPosition)
@@ -143,22 +140,21 @@ namespace InfinityRider.core.riderGame
             {
                 game.Status = GameStatus.PAUSED;
                 menu.UpdateStateMenu();
-                //_mainMenu.wasEscapeKeyDownBefore = true;
             }
         }
 
         public void EndGame()
         {
+            currentRoad.ReinitializeRoad();
             game.Status = GameStatus.FINISHED;
             menu.UpdateStateMenu();
         }
 
         public void ReLaunchGame()
         {
+            currentRoad.ReinitializeRoad();
+            currentBike.Position = new Vector2(currentBike.Position.X, 5);
             LaunchGame();
-            //TODO : Continue this method
-            //_menu.UpdateStateMenu();
-            //Utility.GameStatus = GameStatus.NOTSTART;
         }
     }
 }

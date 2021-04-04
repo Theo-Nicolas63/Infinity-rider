@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Diagnostics;
 
-namespace InfinityRider.core.riderGame.gameobjects
+namespace InfinityRider.core.RiderGame.GameObjects
 {
     class Bike : GameObject
     {
