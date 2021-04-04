@@ -217,7 +217,7 @@ namespace InfinityRider.core.RiderGame.Menu
 
             p.Add(createTitle("Infinity Rider"));
             p.Add(createTitle("Game finished"));
-
+            p.Add(createTitle("Best Jump : " + level.MaxJump));
             setupButtonsNewGameSettingsQuit(p);
 
             return p;
