@@ -3,14 +3,22 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using InfinityRider.core.riderGame.gameobjects.background;
+using InfinityRider.core.riderGame.menu;
+using InfinityRider.core.riderGame.gameobjects.road;
+using InfinityRider.core.riderGame.gameobjects;
+using InfinityRider.core.riderGame.utils;
 
 namespace InfinityRider.core.riderGame
 {
-    class Level : IDisposable
+    public class Level : IDisposable
     {
         private RoadConstructor currentRoad;
 
         private Bike currentBike;
+
+        public Background Background { get; private set; }
+
         private IList<GameObject> GameObjects { get; set; } = new List<GameObject>();
 
         public GraphicsDevice _device;
@@ -21,16 +29,24 @@ namespace InfinityRider.core.riderGame
 
         private Rectangle rect;
 
+        private Game1 game;
+
+        private Menu menu;
+
         public Level(Game game, SpriteBatch spriteBatch, GraphicsDevice device)
         {
-            Background background = new Background(game, spriteBatch);
-            GameObjects.Add(background);
+            this.game = (Game1) game;
+
+            Background = new Background(game, spriteBatch);
+            GameObjects.Add(Background);
             currentRoad = new RoadConstructor(this, game, spriteBatch);
             GameObjects.Add(currentRoad);
             currentBike = new Bike(this, game, spriteBatch);
             GameObjects.Add(currentBike);
             //currentTerrain = currentRoad.getTerrainContour();
             _device = device;
+
+            menu = new Menu(game, this);
         }
 
         public bool IsCollisionGravity(Vector2 futurPosition)
@@ -67,9 +83,15 @@ namespace InfinityRider.core.riderGame
         public void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-            foreach (var gameObject in GameObjects)
+            if(game.Status != GameStatus.PROCESSING)
             {
-                gameObject.Update(gameTime);
+                menu.UpdateMenu();
+            } else
+            {
+                foreach (var gameObject in GameObjects)
+                {
+                    gameObject.Update(gameTime);
+                }
             }
         }
 
@@ -87,10 +109,19 @@ namespace InfinityRider.core.riderGame
         {
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            foreach (var gameObject in GameObjects)
+
+            if (game.Status != GameStatus.PROCESSING)
             {
-                gameObject.Draw(gameTime, spriteBatch);
+                menu.DrawUI();
             }
+            else
+            {
+                foreach (var gameObject in GameObjects)
+                {
+                    gameObject.Draw(gameTime, spriteBatch);
+                }
+            }
+
             //DrawRectangle(rect, Color.White, spriteBatch);
             spriteBatch.End();
         }
@@ -98,6 +129,36 @@ namespace InfinityRider.core.riderGame
         public void Dispose()
         {
             throw new NotImplementedException();
+        }
+
+        public void LaunchGame()
+        {
+            game.Status = GameStatus.PROCESSING;
+            menu.UpdateStateMenu();
+        }
+
+        public void PauseGame()
+        {
+            if (game.Status == GameStatus.PROCESSING)
+            {
+                game.Status = GameStatus.PAUSED;
+                menu.UpdateStateMenu();
+                //_mainMenu.wasEscapeKeyDownBefore = true;
+            }
+        }
+
+        public void EndGame()
+        {
+            game.Status = GameStatus.FINISHED;
+            menu.UpdateStateMenu();
+        }
+
+        public void ReLaunchGame()
+        {
+            LaunchGame();
+            //TODO : Continue this method
+            //_menu.UpdateStateMenu();
+            //Utility.GameStatus = GameStatus.NOTSTART;
         }
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace InfinityRider.core.riderGame
+namespace InfinityRider.core.riderGame.gameobjects.road
 {
     class RoadConstructor : GameObject
     {

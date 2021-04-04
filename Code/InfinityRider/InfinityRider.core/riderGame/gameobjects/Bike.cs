@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
 
-namespace InfinityRider.core.riderGame
+namespace InfinityRider.core.riderGame.gameobjects
 {
     class Bike : GameObject
     {
