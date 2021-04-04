@@ -1,16 +1,15 @@
 ﻿using Apos.Gui;
 using FontStashSharp;
-using InfinityRider.core.riderGame.gameobjects.background;
-using InfinityRider.core.riderGame.utils;
+using InfinityRider.core.RiderGame.GameObjects.Background;
+using InfinityRider.core.RiderGame.Utils;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 using Optional;
 using System;
 using System.Collections.Generic;
 
-namespace InfinityRider.core.riderGame.menu
+namespace InfinityRider.core.RiderGame.Menu
 {
-    public class Menu
+    public class MenuGame
     {
         private Panel panelBackground;
 
@@ -20,7 +19,7 @@ namespace InfinityRider.core.riderGame.menu
         private Game1 game;
         private Level level;
 
-        public Menu(Game game, Level level)
+        public MenuGame(Game game, Level level)
         {
             this.game = (Game1) game;
             this.level = level;

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace InfinityRider.core.riderGame.gameobjects.road
+namespace InfinityRider.core.RiderGame.GameObjects.Road
 {
     class RoadManager
     {
@@ -48,6 +46,23 @@ namespace InfinityRider.core.riderGame.gameobjects.road
         public RoadManager(int[] roadOutline, float offset, float peakHeight, float flatness, int mapPosition) : this(roadOutline, offset, peakHeight, flatness, 0, null) { }
 
         public RoadManager(float offset, float peakHeight, float flatness) : this(new int[ROAD_MINIMUM_SIZE], offset, peakHeight, flatness, 0) { }
+
+        public void ReinitializeRoad()
+        {
+            RoadOutline = new int[ROAD_MINIMUM_SIZE];
+            
+            changingOffset = Offset;
+            movementOffset = OPERATOR_DESCENDING;
+
+            changingPeakHeight = PeakHeight;
+            movementPeakHeight = OPERATOR_DESCENDING;
+
+            MapPosition = 0;
+
+            Randoms = LoadSomeRandomsDouble();
+
+            InitializeRoad();
+        }
 
         private float GetNextChangingOffset()
         {

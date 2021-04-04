@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 
-namespace InfinityRider.core.riderGame.menu
+namespace InfinityRider.core.RiderGame.Menu
 {
     class MenuPanel : ScreenPanel
     {
