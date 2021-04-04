@@ -1,5 +1,4 @@
-﻿using InfinityRider.core.riderGame.utils;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -7,7 +6,7 @@ using System.Diagnostics;
 
 namespace InfinityRider.core.riderGame.gameobjects
 {
-    public class Bike : GameObject
+    class Bike : GameObject
     {
         private Texture2D _texture;
         public Vector2 Position { get; set; } = new Vector2(700, 200);
@@ -23,12 +22,12 @@ namespace InfinityRider.core.riderGame.gameobjects
 
         public Rectangle BoundingRectangle =>
             new Rectangle((int)Position.X-(_texture.Width/2), (int)Position.Y-(_texture.Height/2), _texture.Width, _texture.Height);
-        public Bike(Game game) : base(game)
+        public Bike(Level level, Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
-            _level = Utility.Level;
             SpeedMove = 500f;
             Rotation = 0f;
             SpeedRotation = 9f;
+            _level = level;
             LoadContent();
         }
 
@@ -76,7 +75,7 @@ namespace InfinityRider.core.riderGame.gameobjects
             applyPhysics(gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
             _spriteBatch.Draw(_texture,                                  // Texture (Image)
                 Position,                                                // Position de l'image
