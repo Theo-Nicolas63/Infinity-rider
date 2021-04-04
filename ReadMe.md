@@ -6,6 +6,8 @@ Le jeu n'a pas d'installateur, il faut le lancer directement depuis Visual Studi
 ### Documentation
 La documentation se trouve dans le dossier Documentation. On peut y retrouver le contexte qui nous apprend comment jouer.
 
+Elle est également disponible dans le wiki du GitLab : https://gitlab.iut-clermont.uca.fr/empesce/infinity-rider/-/wikis/home
+
 ### Répartition
 #### Théo a fait :
 - La classe Level, et donc toutes les modifications sur toutes les autres classes pour prendre en compte cela
