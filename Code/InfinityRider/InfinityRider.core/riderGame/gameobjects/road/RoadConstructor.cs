@@ -42,6 +42,12 @@ namespace InfinityRider.core.RiderGame.GameObjects.Road
         /// </summary>
         private int[] TerrainContour;
 
+        /// <summary>
+        /// A constructor of the class RoadConstructor
+        /// </summary>
+        /// <param name="level">The level that have created this instance of class</param>
+        /// <param name="game">The Game instance that contains all the game</param>
+        /// <param name="spriteBatch">The spriteBatch instance of the game</param>
         public RoadConstructor(Level level, Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
         {
             _game = game;
@@ -49,6 +55,9 @@ namespace InfinityRider.core.RiderGame.GameObjects.Road
             _level = level;
         }
 
+        /// <summary>
+        /// A method that loads some contents for this class
+        /// </summary>
         protected override void LoadContent()
         {
             base.LoadContent();
@@ -63,6 +72,10 @@ namespace InfinityRider.core.RiderGame.GameObjects.Road
             }
         }
 
+        /// <summary>
+        /// A method that updates some contents for this class
+        /// </summary>
+        /// <param name="gameTime">The instance of GameTime of the game</param>
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -94,6 +107,11 @@ namespace InfinityRider.core.RiderGame.GameObjects.Road
             }
         }
 
+        /// <summary>
+        /// A method that draws the road
+        /// </summary>
+        /// <param name="gameTime">The instance of GameTime of the game</param>
+        /// <param name="spriteBatch">The spriteBatch instance of the game</param>
         public override void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
             Rectangle screenRectangle = new Rectangle(0, 0, _screenWidth, _screenHeight);
@@ -106,11 +124,19 @@ namespace InfinityRider.core.RiderGame.GameObjects.Road
             base.Draw(gameTime);
         }
 
+        /// <summary>
+        /// A method to get the value of the height of the road at a precise index
+        /// </summary>
+        /// <param name="index">The index for abscissa</param>
+        /// <returns>The value for ordinate, but from the top of the screen</returns>
         public int getTerrainContour(int index)
         {
             return this.TerrainContour[index];
         }
 
+        /// <summary>
+        /// A method that create the road from the instance of RoadManager
+        /// </summary>
         private void GenerateTerrainContour()
         {
             if (Road == null)
@@ -123,6 +149,9 @@ namespace InfinityRider.core.RiderGame.GameObjects.Road
             TerrainContour = Road.GetCurrentRoad(_screenWidth);
         }
 
+        /// <summary>
+        /// A method that generate the texture of the road currently displaied
+        /// </summary>
         private void CreateForeGround()
         {
             Color[] foreGroundColors = new Color[_screenWidth * _screenHeight];
@@ -151,11 +180,18 @@ namespace InfinityRider.core.RiderGame.GameObjects.Road
             _foregroundTexture.SetData(foreGroundColors);
         }
 
+        /// <summary>
+        /// A method that use the instance of Level within this class to know if there are a collision
+        /// </summary>
+        /// <param name="gameTime">The instance of GameTime of the game</param>
         public void applyPhysics(GameTime gameTime)
         {
             _level.IsCollisionForward(gameTime);
         }
 
+        /// <summary>
+        /// A method to reinitialize the road, for instance, for a new game
+        /// </summary>
         public void ReinitializeRoad()
         {
             Road.ReinitializeRoad();
