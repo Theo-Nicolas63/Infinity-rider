@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace InfinityRider.core.riderGame.gameobjects.background
+﻿namespace InfinityRider.core.RiderGame.GameObjects.Background
 {
     public class BackgroundImage
     {

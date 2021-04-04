@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 
-namespace InfinityRider.core.riderGame.gameobjects.background
+namespace InfinityRider.core.RiderGame.GameObjects.Background
 {
 
     public class Background : GameObject

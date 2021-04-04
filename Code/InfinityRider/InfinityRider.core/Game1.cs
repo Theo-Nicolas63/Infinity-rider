@@ -1,12 +1,9 @@
-﻿using Apos.Gui;
-using FontStashSharp;
-using InfinityRider.core.riderGame;
-using InfinityRider.core.riderGame.utils;
+﻿using InfinityRider.core.RiderGame;
+using InfinityRider.core.RiderGame.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
 
 namespace InfinityRider.core
 {
