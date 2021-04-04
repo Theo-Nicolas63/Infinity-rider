@@ -273,7 +273,7 @@ namespace InfinityRider.core.RiderGame.Menu
             Component Component_background = Default.CreateButton(BackgroundImage.getHumanName(background), c =>
             {
                 c.IsFocused = true;
-                GuiHelper.NextLoopActions.Add(() => { level.Background.changeBackground(background); });
+                GuiHelper.NextLoopActions.Add(() => { level.Background.ChangeBackground(background); });
             }, menuFocus.GrabFocus);
             Component_background.IsFocused = level.Background.BackgroundName == background ? true : false;
             p.Add(Component_background);
