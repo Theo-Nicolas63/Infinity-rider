@@ -4,15 +4,42 @@ using Microsoft.Xna.Framework.Input;
 
 namespace InfinityRider.core.RiderGame.GameObjects.Road
 {
+    /// <summary>
+    /// A class to display a Road on a game
+    /// </summary>
     class RoadConstructor : GameObject
     {
+        /// <summary>
+        /// The width of the window
+        /// </summary>
         private int _screenWidth;
+        /// <summary>
+        /// The height of the window
+        /// </summary>
         private int _screenHeight;
+        /// <summary>
+        /// The texture of the road currently displaied
+        /// </summary>
         private Texture2D _foregroundTexture;
+        /// <summary>
+        /// The level that have created this instance of class
+        /// </summary>
         Level _level;
+        /// <summary>
+        /// The speed of the road that are displaied, to move it
+        /// </summary>
         private float SpeedMove { get; set; } = 0;
+        /// <summary>
+        /// The color of the road
+        /// </summary>
         public Color MapColor { get; set; } = Color.Green;
+        /// <summary>
+        /// The instance of RoadManager that are being used to create the road
+        /// </summary>
         private RoadManager Road { get; set; }
+        /// <summary>
+        /// An array that contains the position of the current road, with the index for abscissa and the value for ordinate, but from the top of the screen
+        /// </summary>
         private int[] TerrainContour;
 
         public RoadConstructor(Level level, Game game, SpriteBatch spriteBatch) : base(game, spriteBatch)
