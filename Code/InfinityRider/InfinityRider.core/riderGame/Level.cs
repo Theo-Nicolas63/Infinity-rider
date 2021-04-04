@@ -1,13 +1,13 @@
-﻿using InfinityRider.core.riderGame.gameobjects;
-using InfinityRider.core.riderGame.gameobjects.background;
-using InfinityRider.core.riderGame.gameobjects.road;
-using InfinityRider.core.riderGame.menu;
-using InfinityRider.core.riderGame.utils;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using InfinityRider.core.riderGame.gameobjects.background;
+using InfinityRider.core.riderGame.menu;
+using InfinityRider.core.riderGame.gameobjects.road;
+using InfinityRider.core.riderGame.gameobjects;
+using InfinityRider.core.riderGame.utils;
 
 namespace InfinityRider.core.riderGame
 {
@@ -16,6 +16,9 @@ namespace InfinityRider.core.riderGame
         private RoadConstructor currentRoad;
 
         private Bike currentBike;
+
+        public Background Background { get; private set; }
+
         private IList<GameObject> GameObjects { get; set; } = new List<GameObject>();
 
         public GraphicsDevice _device;
@@ -26,29 +29,24 @@ namespace InfinityRider.core.riderGame
 
         private Rectangle rect;
 
-        private Menu _menu;
+        private Game1 game;
 
-        private SpriteBatch _spriteBatch;
+        private Menu menu;
 
-        public Level(Game game, GraphicsDevice device)
+        public Level(Game game, SpriteBatch spriteBatch, GraphicsDevice device)
         {
-            Utility.Level = this;
-            Utility.Background = new Background(game);
-            GameObjects.Add(Utility.Background);
-            Utility.RoadConstructor = new RoadConstructor(game);
-            currentRoad = Utility.RoadConstructor;
+            this.game = (Game1) game;
+
+            Background = new Background(game, spriteBatch);
+            GameObjects.Add(Background);
+            currentRoad = new RoadConstructor(this, game, spriteBatch);
             GameObjects.Add(currentRoad);
-            Utility.Bike = new Bike(game);
-            currentBike = Utility.Bike;
+            currentBike = new Bike(this, game, spriteBatch);
             GameObjects.Add(currentBike);
-
-            Utility.Menu = new Menu();
-            _menu = Utility.Menu;
-
-            _spriteBatch = Utility.SpriteBatch;
-
             //currentTerrain = currentRoad.getTerrainContour();
             _device = device;
+
+            menu = new Menu(game, this);
         }
 
         public bool IsCollisionGravity(Vector2 futurPosition)
@@ -75,8 +73,9 @@ namespace InfinityRider.core.riderGame
                     currentBike.GravityAcceleration = -10;
                 
                 currentBike.Position = Vector2.Add(currentBike.Position, new Vector2(0, currentBike.GravityAcceleration * (float)gameTime.ElapsedGameTime.TotalSeconds));
-            }            
-            currentBike.GravityAcceleration = currentBike.GravityAcceleration+20;
+            }
+            if(currentBike.GravityAcceleration < 500)
+                currentBike.GravityAcceleration = currentBike.GravityAcceleration+20;
         }
 
 
@@ -84,22 +83,15 @@ namespace InfinityRider.core.riderGame
         public void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-            foreach (var gameObject in GameObjects)
+            if(game.Status != GameStatus.PROCESSING)
             {
-                gameObject.Update(gameTime);
-            }
-
-            switch (Utility.GameStatus)
+                menu.UpdateMenu();
+            } else
             {
-                case GameStatus.PROCESSING:
-                    foreach (var gameObject in GameObjects)
-                    {
-                        gameObject.Update(gameTime);
-                    }
-                    break;
-                default:
-                    _menu.UpdateMenu();
-                    break;
+                foreach (var gameObject in GameObjects)
+                {
+                    gameObject.Update(gameTime);
+                }
             }
         }
 
@@ -113,24 +105,25 @@ namespace InfinityRider.core.riderGame
             spriteBatch.Draw(testCollision, coords, color);
         }
 
-        public void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // TODO: Add your drawing code here
-            _spriteBatch.Begin();
-            switch (Utility.GameStatus)
+            spriteBatch.Begin();
+
+            if (game.Status != GameStatus.PROCESSING)
             {
-                case GameStatus.PROCESSING:
-                    foreach (var gameObject in GameObjects)
-                    {
-                        gameObject.Draw(gameTime);
-                    }
-                    break;
-                default:
-                    _menu.DrawUI();
-                    break;
+                menu.DrawUI();
             }
+            else
+            {
+                foreach (var gameObject in GameObjects)
+                {
+                    gameObject.Draw(gameTime, spriteBatch);
+                }
+            }
+
             //DrawRectangle(rect, Color.White, spriteBatch);
-            _spriteBatch.End();
+            spriteBatch.End();
         }
 
         public void Dispose()
@@ -140,24 +133,24 @@ namespace InfinityRider.core.riderGame
 
         public void LaunchGame()
         {
-            Utility.GameStatus = GameStatus.PROCESSING;
-            _menu.UpdateStateMenu();
+            game.Status = GameStatus.PROCESSING;
+            menu.UpdateStateMenu();
         }
 
         public void PauseGame()
         {
-            if (Utility.GameStatus == GameStatus.PROCESSING)
+            if (game.Status == GameStatus.PROCESSING)
             {
-                Utility.GameStatus = GameStatus.PAUSED;
-                _menu.UpdateStateMenu();
+                game.Status = GameStatus.PAUSED;
+                menu.UpdateStateMenu();
                 //_mainMenu.wasEscapeKeyDownBefore = true;
             }
         }
 
         public void EndGame()
         {
-            Utility.GameStatus = GameStatus.FINISHED;
-            _menu.UpdateStateMenu();
+            game.Status = GameStatus.FINISHED;
+            menu.UpdateStateMenu();
         }
 
         public void ReLaunchGame()

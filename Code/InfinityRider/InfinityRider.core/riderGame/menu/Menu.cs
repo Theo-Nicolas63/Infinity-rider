@@ -1,12 +1,12 @@
 ﻿using Apos.Gui;
 using FontStashSharp;
+using InfinityRider.core.riderGame.gameobjects.background;
+using InfinityRider.core.riderGame.utils;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Optional;
 using System;
 using System.Collections.Generic;
-using InfinityRider.core.riderGame.utils;
-using InfinityRider.core.riderGame.gameobjects.background;
 
 namespace InfinityRider.core.riderGame.menu
 {
@@ -17,12 +17,17 @@ namespace InfinityRider.core.riderGame.menu
         ComponentFocus menuFocus;
         Switcher<MenuScreens> menuSwitch;
         LinkedList<MenuScreens> oldMenu = new LinkedList<MenuScreens>();
+        private Game1 game;
+        private Level level;
 
-        public Menu()
+        public Menu(Game game, Level level)
         {
-            menuFocus = new ComponentFocus(Default.ConditionPrevFocus, Default.ConditionNextFocus);
-
+            this.game = (Game1) game;
+            this.level = level;
+            
             SetUpFont();
+
+            menuFocus = new ComponentFocus(Default.ConditionPrevFocus, Default.ConditionNextFocus);
 
             MenuPanel menuPanel = new MenuPanel();
             menuPanel.Layout = new LayoutVerticalCenter();
@@ -46,7 +51,7 @@ namespace InfinityRider.core.riderGame.menu
 
         public void UpdateStateMenu()
         {
-            switch(Utility.GameStatus)
+            switch(game.Status)
             {
                 case GameStatus.NOTSTART:
                     selectMenu(MenuScreens.Main);
@@ -127,16 +132,16 @@ namespace InfinityRider.core.riderGame.menu
 
         public void SetUpFont(int width, int height, string path)
         {
-            FontSystem fontSystem = FontSystemFactory.Create(Utility.Game.GraphicsDevice, width, height);
+            FontSystem fontSystem = FontSystemFactory.Create(game.GraphicsDevice, width, height);
             fontSystem.AddFont(TitleContainer.OpenStream(path));
             //fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/Fonts/Allura-Regular.otf"));
 
-            GuiHelper.Setup(Utility.Game, fontSystem);
+            GuiHelper.Setup(game, fontSystem);
         }
 
         public void SetUpFont()
         {
-            SetUpFont(2048, 2048, $"{Utility.Game.Content.RootDirectory}/Fonts/SIXTY.TTF");
+            SetUpFont(2048, 2048, $"{game.Content.RootDirectory}/Fonts/SIXTY.TTF");
         }
 
         public void Update()
@@ -169,7 +174,7 @@ namespace InfinityRider.core.riderGame.menu
 
         private void setupButtonsNewGameSettingsQuit(Panel p)
         {
-            p.Add(Default.CreateButton("New Game", c => { Utility.Level.ReLaunchGame(); }, menuFocus.GrabFocus));
+            p.Add(Default.CreateButton("New Game", c => { level.ReLaunchGame(); }, menuFocus.GrabFocus));
             p.Add(Default.CreateButton("Settings", c => { selectMenu(MenuScreens.Settings); }, menuFocus.GrabFocus));
             p.Add(Default.CreateButton("Quit", c => { selectMenu(MenuScreens.Quit); }, menuFocus.GrabFocus));
         }
@@ -198,7 +203,7 @@ namespace InfinityRider.core.riderGame.menu
             p.Add(createTitle("Infinity Rider"));
             p.Add(createTitle("Game paused"));
 
-            p.Add(Default.CreateButton("Resume Game", c => { Utility.Level.LaunchGame(); }, menuFocus.GrabFocus));
+            p.Add(Default.CreateButton("Resume Game", c => { level.LaunchGame(); }, menuFocus.GrabFocus));
             setupButtonsNewGameSettingsQuit(p);
 
             return p;
@@ -241,18 +246,6 @@ namespace InfinityRider.core.riderGame.menu
             return p;
         }
 
-        private void addButtonBackgroundImage(Panel p, string background)
-        {
-            if (!BackgroundImage.isExist(background)) return;
-            Component Component_background = Default.CreateButton(BackgroundImage.getHumanName(background), c =>
-            {
-                c.IsFocused = true;
-                GuiHelper.NextLoopActions.Add(() => { Utility.Background.changeBackground(background); });
-            }, menuFocus.GrabFocus);
-            Component_background.IsFocused = Utility.Background.BackgroundName == background ? true : false;
-            p.Add(Component_background);
-        }
-
         private Component setupBackgroundsMenu()
         {
             panelBackground = new Panel();
@@ -274,6 +267,17 @@ namespace InfinityRider.core.riderGame.menu
             }, menuFocus.GrabFocus));
 
             return panelBackground;
+        }
+        private void addButtonBackgroundImage(Panel p, string background)
+        {
+            if (!BackgroundImage.isExist(background)) return;
+            Component Component_background = Default.CreateButton(BackgroundImage.getHumanName(background), c =>
+            {
+                c.IsFocused = true;
+                GuiHelper.NextLoopActions.Add(() => { level.Background.changeBackground(background); });
+            }, menuFocus.GrabFocus);
+            Component_background.IsFocused = level.Background.BackgroundName == background ? true : false;
+            p.Add(Component_background);
         }
 
         private Component setupGraphicsMenu()
@@ -315,7 +319,7 @@ namespace InfinityRider.core.riderGame.menu
 
             p.Add(createTitle("Do you really want to quit?"));
             p.Add(Default.CreateButton("Yes", c => {
-                Utility.Game.Exit();
+                game.Exit();
             }, menuFocus.GrabFocus));
             p.Add(Default.CreateButton("No", c => {
                 selectOldMenu();

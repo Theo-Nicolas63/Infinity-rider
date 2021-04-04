@@ -1,8 +1,6 @@
 ﻿using Apos.Gui;
 using FontStashSharp;
 using InfinityRider.core.riderGame;
-using InfinityRider.core.riderGame.gameobjects;
-using InfinityRider.core.riderGame.gameobjects.background;
 using InfinityRider.core.riderGame.utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,9 +15,12 @@ namespace InfinityRider.core
 
         private Level level;
         private GraphicsDeviceManager _graphics;
-        private IList<GameObject> GameObjects { get; set; } = new List<GameObject>();
-        public Background GameBackground { get; private set; }
+        private SpriteBatch _spriteBatch;
         public GraphicsDevice _device { get; private set; }
+        public GameStatus Status { get; set; } = GameStatus.NOTSTART;
+
+        public int Width { get; set; } = 1700;
+        public int Height { get; set; } = 900;
 
         public Game1()
         {
@@ -32,33 +33,30 @@ namespace InfinityRider.core
         {
             // TODO: Add your initialization logic here
 
-            Utility.Settings = new Settings();
-            Utility.Game = this;
-            Utility.Graphics = _graphics;
+            base.Initialize();
 
-            _graphics.PreferredBackBufferWidth = Utility.Settings.Width;
-            _graphics.PreferredBackBufferHeight = Utility.Settings.Height;
+            _graphics.PreferredBackBufferWidth = Width;
+            _graphics.PreferredBackBufferHeight = Height;
             _graphics.ApplyChanges();
 
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += WindowClientChanged;
 
-            Utility.SpriteBatch = new SpriteBatch(GraphicsDevice);
-
-            Utility.Level = new Level(this, _device);
-
-            level = Utility.Level;
-
             _device = this.GraphicsDevice;
-            base.Initialize();
+            this.level = new Level(this, _spriteBatch, _device);
         }
 
-        private void WindowClientChanged(object sender, EventArgs e) { }
+        private void WindowClientChanged(object sender, EventArgs e) 
+        {
+            Width = GraphicsDevice.Viewport.Width;
+            Height = GraphicsDevice.Viewport.Height;
+        }
 
         protected override void LoadContent()
         {
-            // TODO: use this.Content to load your game content here
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
@@ -67,22 +65,18 @@ namespace InfinityRider.core
                 level.PauseGame();
 
             // TODO: Add your update logic here
-
             level.Update(gameTime);
-
+            
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
             // TODO: Add your drawing code here
+            level.Draw(gameTime, _spriteBatch);
 
-            level.Draw(gameTime);
             base.Draw(gameTime);
         }
-
-
     }
 }
