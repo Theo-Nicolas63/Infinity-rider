@@ -1,4 +1,4 @@
-#Infinity Rider
+# Infinity Rider
 
 ### Installation
 Le jeu n'a pas d'installateur, il faut le lancer directement depuis Visual Studio.
