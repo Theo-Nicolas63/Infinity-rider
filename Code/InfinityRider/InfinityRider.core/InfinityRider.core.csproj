@@ -5,12 +5,16 @@
   <ItemGroup>
     <None Remove="Content\Fonts\Allura-Regular.otf" />
     <None Remove="Content\Fonts\SIXTY.TTF" />
+    <None Remove="Content\Score.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Fonts\Allura-Regular.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Fonts\SIXTY.TTF">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Score.spritefont">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

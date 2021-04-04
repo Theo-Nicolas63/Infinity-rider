@@ -194,6 +194,7 @@ namespace InfinityRider.core.RiderGame.GameObjects.Road
         /// </summary>
         public void ReinitializeRoad()
         {
+            SpeedMove = 0f;
             Road.ReinitializeRoad();
         }
     }

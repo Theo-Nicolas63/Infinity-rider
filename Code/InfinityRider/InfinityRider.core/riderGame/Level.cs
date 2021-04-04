@@ -52,7 +52,7 @@ namespace InfinityRider.core.RiderGame
         /// <summary>
         /// score of the game
         /// </summary>
-        private int Score = 0;
+        public int Score { get; private set; } = 0;
 
         /// <summary>
         /// font
@@ -97,7 +97,7 @@ namespace InfinityRider.core.RiderGame
             rect = terrain;
             if (currentBike.BoundingRectangle.Intersects(terrain))
             {
-                if (MaxJump < Score)
+                if (MaxJump < Score && TimeCompteur < 29)
                     MaxJump = Score;
                 Score = 0;
                 return true;
@@ -248,6 +248,9 @@ namespace InfinityRider.core.RiderGame
         {
             currentRoad.ReinitializeRoad();
             currentBike.Position = new Vector2(currentBike.Position.X, 5);
+            Score = 0;
+            MaxJump = 0;
+            TimeCompteur = 30;
             LaunchGame();
         }
 
