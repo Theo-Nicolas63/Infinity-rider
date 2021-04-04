@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 
 namespace InfinityRider.core.RiderGame.GameObjects.Road
 {
@@ -82,7 +83,9 @@ namespace InfinityRider.core.RiderGame.GameObjects.Road
 
             var keyBoardState = Keyboard.GetState();
 
-            if (keyBoardState.IsKeyDown(Keys.A))
+            TouchCollection touchCollection = TouchPanel.GetState();
+
+            if (keyBoardState.IsKeyDown(Keys.A) || touchCollection.Count > 0)
             {
                 applyPhysics(gameTime);
                 if (SpeedMove < 600f)
