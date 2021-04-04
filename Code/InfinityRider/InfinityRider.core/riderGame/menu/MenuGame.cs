@@ -84,7 +84,10 @@ namespace InfinityRider.core.RiderGame.Menu
                     SelectMenu(MenuScreens.Pause);
                     break;
                 case GameStatus.FINISHED:
-                    SelectMenu(MenuScreens.Finish);
+                    if(menuSwitch.Key.ValueOr(MenuScreens.Main) == MenuScreens.Pause || menuSwitch.Key.ValueOr(MenuScreens.Main) == MenuScreens.Main)
+                    {
+                        SelectMenu(MenuScreens.Finish);
+                    }
                     break;
             }
         }
@@ -274,6 +277,11 @@ namespace InfinityRider.core.RiderGame.Menu
 
             p.Add(CreateTitle("Infinity Rider"));
             p.Add(CreateTitle("Game finished"));
+
+            p.Add(CreateLabelDynamic(() =>
+            {
+                return "Score: " + level.Score;
+            }));
 
             SetupButtonsNewGameSettingsQuit(p);
 

@@ -74,10 +74,10 @@ namespace InfinityRider.core.RiderGame.GameObjects
         {
             var keyBoardState = Keyboard.GetState();
 
-            if(keyBoardState.IsKeyDown(Keys.Space))
-            {
-                Rotation -= SpeedRotation * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
+            //if(keyBoardState.IsKeyDown(Keys.Space))
+            //{
+            //    Rotation -= SpeedRotation * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //}
 
             if (keyBoardState.IsKeyDown(Keys.Up))
             {
