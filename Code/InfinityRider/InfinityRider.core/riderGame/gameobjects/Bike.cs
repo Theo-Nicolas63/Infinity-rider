@@ -93,7 +93,6 @@ namespace InfinityRider.core.RiderGame.GameObjects
             if (!(_level.IsCollisionGravity(futurePosition)))
             {
                 this.Position = futurePosition;
-                //GravityAcceleration = GravityAcceleration + 10;
             }
         }
 

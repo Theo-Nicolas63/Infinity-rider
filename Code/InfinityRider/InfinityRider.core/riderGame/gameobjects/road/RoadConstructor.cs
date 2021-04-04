@@ -72,11 +72,14 @@ namespace InfinityRider.core.RiderGame.GameObjects.Road
             if (keyBoardState.IsKeyDown(Keys.A))
             {
                 applyPhysics(gameTime);
-                SpeedMove = 500f;
+                if (SpeedMove < 450f)
+                    SpeedMove += 5;
             }
             else
             {
-                SpeedMove = 0;
+                applyPhysics(gameTime);
+                if (SpeedMove > 5f)
+                    SpeedMove -= 5f;
             }
 
             if (Road != null) Road.NextPosition(SpeedMove * (float)gameTime.ElapsedGameTime.TotalSeconds);

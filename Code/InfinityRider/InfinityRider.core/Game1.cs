@@ -19,6 +19,8 @@ namespace InfinityRider.core
         public int Width { get; set; } = 1700;
         public int Height { get; set; } = 900;
 
+        private SpriteFont font;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -40,7 +42,7 @@ namespace InfinityRider.core
             Window.ClientSizeChanged += WindowClientChanged;
 
             _device = this.GraphicsDevice;
-            this.level = new Level(this, _spriteBatch, _device);
+            this.level = new Level(this, _spriteBatch, _device, font);
         }
 
         private void WindowClientChanged(object sender, EventArgs e) 
@@ -52,7 +54,7 @@ namespace InfinityRider.core
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            font = Content.Load<SpriteFont>("Score");
             // TODO: use this.Content to load your game content here
         }
 
